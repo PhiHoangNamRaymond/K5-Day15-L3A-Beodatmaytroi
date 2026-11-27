@@ -1,0 +1,11 @@
+.git
+**/.env
+**/.env.*
+**/node_modules
+**/dist
+**/__pycache__
+**/*.pyc
+**/.venv
+**/traces
+**/eval/run-*.csv
+**/cost/simulate-*
