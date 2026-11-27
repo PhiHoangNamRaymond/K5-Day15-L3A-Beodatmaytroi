@@ -1,4 +1,5 @@
-﻿import { shortDate } from "../features/schedule/types";
+import { Icon } from "./Icon";
+import { shortDate } from "../features/schedule/types";
 import type { Review } from "../features/schedule/types";
 import { useState } from "react";
 
@@ -21,9 +22,9 @@ export function ScheduleSidebar({ view, review, update, busy, pending, approved,
   const visibleIssues = expanded ? issues : issues.slice(0, 3);
   const sourceRows = new Map(review?.rows.map((row) => [row.id, row]));
   if (view === "changes") return <section className="panel" aria-labelledby="update-heading">
-      <div className="panel-title"><h2 id="update-heading">Cập nhật phòng</h2></div>
+      <div className="panel-title"><div><h2 id="update-heading">Thay đổi phòng học</h2><p>Chọn cập nhật để đối chiếu với lịch đã thông báo.</p></div><Icon name="building" /></div>
       <div className="issues">
-        <label className="field"><span className="sr-only">Nguồn cập nhật</span>
+        <label className="field"><span className="field-label">Nguồn cập nhật phòng</span>
           <select id="update" value={update} disabled={busy || !review?.updates.length}
             onChange={(event) => onUpdate(event.target.value)}>
             <option value="">Chọn sự kiện đổi phòng</option>
@@ -40,20 +41,20 @@ export function ScheduleSidebar({ view, review, update, busy, pending, approved,
           {impact.old_room && <button className="quiet" onClick={() => onSource(impact.session)}>Mở buổi trong lịch</button>}
         </div>}
         <div id="notice" hidden={!review?.notice || pending}>
-          <h3>Nháp thông báo cho BTC</h3>
+          <h3><Icon name="document" />Nháp thông báo cho BTC</h3>
           <pre id="notice-text">{pending ? "" : review?.notice}</pre>
           <button id="copy" className="secondary" disabled={busy || pending} onClick={onCopy}>Sao chép nháp</button>
         </div>
       </div>
     </section>;
   return <section className="panel" aria-labelledby="alerts-heading">
-      <div className="panel-title"><h2 id="alerts-heading">Cảnh báo</h2>
-        <span id="issue-count">{!pending && review ? issues.length + " lỗi chặn" : ""}</span></div>
+      <div className="panel-title"><div><h2 id="alerts-heading">Các điểm cần xác minh</h2><p>Kiểm tra căn cứ và xử lý từng vấn đề trước khi duyệt.</p></div>
+        <span id="issue-count">{!pending && review ? issues.length + " vấn đề" : ""}</span></div>
       <div id="issues" className="issues">
         {pending ? <p>Đang chờ kiểm tra bản nháp.</p> :
           issues.length ? visibleIssues.map((issue) => (
             <article key={issue.field + issue.sessions.join("-") + issue.message} className="issue">
-              <p>{issue.message}</p>
+              <p><Icon name="alert" />{issue.message}</p>
               {issue.sessions.map((id) => {
                 const row = sourceRows.get(id);
                 return <button key={id} className="source-link" onClick={() => onSource(id)}>
