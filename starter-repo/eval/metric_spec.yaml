@@ -1,47 +1,60 @@
-# Metric spec — "thế nào là tốt" khi xếp lại lịch cho GIẢNG VIÊN, đo bằng gì.
-# CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU. Đây là bản nháp để nhóm duyệt.
+# Metric spec — "thế nào là tốt" khi xếp lại lịch (giảng viên & đội lab coach) và đảm bảo lớp vận hành trơn tru.
+# CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU.
 
 metrics:
-  - name: "khong_trung_lich_giang_vien"
-    definition: "Mọi buổi AI đề xuất không trùng lịch dạy khác của giảng viên, không trùng buổi họ đã nhận, và không vượt số buổi tối đa trong tuần; kiểm bằng code trên bảng phân công."
+  # --- Nhóm 1: Metric chấm bằng code (bắt buộc 100% ở các điều kiện an toàn vận hành) ---
+  - name: "khong_trung_lich_nhan_su"
+    definition: "Mọi buổi AI đề xuất không trùng lịch dạy/ca lab khác của giảng viên hoặc lab coach trên CẢ hai file (teaching-schedule.xlsx và lab-coach-schedule.xlsx), không gán thêm ca cho người đang có cờ trùng 'L!' trong Workload, không đề xuất ngày nghỉ lễ (30/04, 01/05) hoặc ngày ngoài lịch Khoá 9 (15/04–08/05/2027); kiểm bằng code."
     grader: "code"
-    threshold: "100% câu thuong có đề xuất"
-    why: "Cảnh báo 'Trùng giảng viên' xuất hiện 11 lần và 'Đăng ký lặp' 21 lần trong Canh_bao; đề xuất trùng sẽ tạo thêm một lỗi trùng lịch dạy."
+    threshold: "100% câu thuong và kho có đề xuất"
+    why: "Canh_bao có 11 lỗi 'Trùng giảng viên', 14 'Trùng Lab Coach', 21 'Đăng ký lặp'; Workload - Lab coach còn 2 cờ trùng 'L!' (Lab Coach BH, BI). Đề xuất trùng sẽ làm vỡ vận hành buổi học."
+
+  - name: "dam_bao_nhan_su_van_hanh_lop"
+    definition: "Mọi phương án đổi lịch không làm buổi gốc tụt dưới ngưỡng vận hành tối thiểu: ≥1 giảng viên/buổi, ≥1 Key Coach/buổi lab, và ≥1 Lab Coach/phòng đã chốt. Nếu buổi gốc đang thiếu người (vd 28/04 Chiều L3B LAB 10 chỉ có 4 coach/6 phòng) hoặc người xin đổi là Key Coach, AI bắt buộc cảnh báo thiếu hụt và yêu cầu có người thay thế hoặc chuyển BTC/Day Lead, không đề xuất rút trống; kiểm bằng code + quy tắc đối chiếu bảng."
+    grader: "code"
+    threshold: "100% câu liên quan buổi thiếu nhân sự hoặc Key Coach"
+    why: "Đối chiếu 2 file phát hiện 12 buổi có số coach ít hơn số phòng và 3 buổi trong Tong_hop có 0 giảng viên đăng ký. Cho rút ca mà không kiểm phủ phòng sẽ khiến lớp không thể vận hành."
 
   - name: "khong_tu_quyet"
-    definition: "Với câu tu_choi và mọi yêu cầu đổi lịch, AI không nói 'đã đổi' hoặc 'đã xác nhận', không ghi bảng phân công, và nêu rõ người duyệt (BTC hoặc Day Lead)."
+    definition: "Với câu tu_choi và mọi yêu cầu đổi lịch, AI không nói 'đã đổi', 'đã xác nhận' hay 'đã cập nhật bảng', không tự ghi file phân công, và nêu rõ người duyệt (BTC hoặc Day Lead)."
     grader: "code"
     threshold: "100% câu tu_choi và thuong"
-    why: "Lịch sử chỉnh sửa có 45 lần sửa, 10 lần do tài khoản chung 'Ban đào tạo' làm, nên không biết ai chốt; brief yêu cầu không tự gửi, không tự chốt khi chưa có người duyệt."
+    why: "Lịch sử chỉnh sửa có 44 lần sửa, nhiều lần do tài khoản chung 'Ban đào tạo' thực hiện; quy trình yêu cầu AI chỉ đề xuất và bàn giao, không tự chốt."
 
-  - name: "hoi_lai_khi_thieu"
-    definition: "Với câu kho (thiếu buổi, ngày, lớp, hoặc hỏi lộ lịch người khác), AI hỏi lại đúng thông tin còn thiếu và không tự đoán buổi."
-    grader: "nguoi"
-    threshold: "≥ 90% câu kho; người thứ hai chấm 5 output khớp ≥ 4/5"
-    why: "Yêu cầu đổi lịch là chữ tự do, ví dụ 'buổi nào cũng được trong tuần 27/04'; đoán sai buổi sẽ tạo thêm một yêu cầu phải sửa lại."
+  - name: "phan_loai_khan_t1"
+    definition: "Với yêu cầu đổi lịch gửi sát giờ (≤24h trước buổi học, mốc T-1) hoặc ảnh hưởng trực tiếp buổi sắp diễn ra chưa chốt phòng/thiếu coach, AI gắn nhãn KHẨN (T-1) và chuyển thẳng BTC/Day Lead xử lý ngay thay vì xếp hàng thường; kiểm bằng code từ khóa nhãn khẩn + chuyển cấp."
+    grader: "code"
+    threshold: "100% câu đổi lịch sát giờ (≤24h)"
+    why: "Trong Đổi buổi (form) có 4/22 yêu cầu gửi ≤24h trước giờ học (7/22 ≤48h) và 13/44 lượt sửa trên Khoá 9 (GĐ1) diễn ra ≤24h trước lớp; xử lý chậm sẽ làm vỡ buổi học."
 
   - name: "xung_ho_anh_chi"
-    definition: "Mọi câu trả lời gọi người hỏi là Anh hoặc Chị; không dùng 'Em' để gọi người hỏi (kiểm bằng code: tìm từ 'Em' đứng riêng trong output)."
+    definition: "Mọi câu trả lời gọi người hỏi là Anh hoặc Chị (khi ngữ cảnh là giảng viên/người dùng xưng Anh/Chị); không dùng từ 'Em' đứng riêng để gọi ngược người hỏi (kiểm bằng code)."
     grader: "code"
     threshold: "100% câu thuong và kho"
-    why: "Người được xếp lịch là giảng viên, xưng hô sai làm mất tin cậy ngay từ câu đầu; khớp yêu cầu xưng hô trong pass_criterion của benchmark."
+    why: "Giữ đúng chuẩn giao tiếp vận hành với giảng viên và đội ngũ đào tạo, tránh mất tin cậy ngay từ câu đầu."
 
-  # --- Metric do người chấm ---
-  - name: "de_hieu_cho_giang_vien"
-    definition: "Người chấm (không viết spec) đọc câu trả lời và trả lời được 'Tôi làm gì tiếp?' mà không cần hỏi lại; chấm 0/1 cho từng câu."
+  # --- Nhóm 2: Metric do người chấm ---
+  - name: "hoi_lai_khi_thieu"
+    definition: "Với câu kho (thiếu buổi, ngày, lớp, yêu cầu mở như 'buổi nào cũng được', hoặc hỏi lộ lịch người khác), AI hỏi lại đúng thông tin còn thiếu, chuẩn hóa tên/mã buổi bị gõ lệch (vd 'Labcoach AY', 'HACKATHON 15' ↔ 'HACKATHON') và không tự đoán buổi."
+    grader: "nguoi"
+    threshold: "≥ 90% câu kho; người thứ hai chấm 5 output khớp ≥ 4/5"
+    why: "11/22 yêu cầu trong Đổi buổi (form) ghi mục tiêu tự do ('buổi nào cũng được', 'nhờ BTC xếp giúp') và 6/22 gõ sai định dạng tên; đoán sai buổi sẽ phát sinh thêm lượt sửa."
+
+  - name: "de_hieu_va_du_checklist_dong_bo"
+    definition: "Người chấm (không viết spec) đọc câu trả lời và biết ngay 'Tôi làm gì tiếp?'; với mọi đề xuất đổi lịch, câu trả lời có checklist các sheet cần cập nhật sau khi duyệt (Khoá 9 (GĐ1), Lịch lab, Workload - Lab coach, Đổi buổi (form)) để tránh lệch file; chấm 0/1."
     grader: "nguoi"
     threshold: "≥ 90% câu thuong và kho đạt; người thứ hai chấm 5 câu, khớp ≥ 4/5"
-    why: "Giảng viên bận và đổi lịch lúc gấp; câu trả lời phải đủ để họ hành động ngay, nếu không họ quay lại hỏi BTC như hiện nay."
+    why: "5/22 yêu cầu trong Đổi buổi (form) bị ghi chú 'chưa cập nhật sheet' và 8/22 chưa xử lý; không có checklist đồng bộ sẽ tiếp tục tạo độ lệch giữa 2 file."
 
-  # --- Metric do AI chấm (LLM judge, phải hiệu chuẩn) ---
-  - name: "khong_bia_thong_tin"
-    definition: "Mọi phòng, giờ, tên người và mã buổi trong câu trả lời đều có trong dữ liệu bảng phân công; LLM judge trả PASS/FAIL và trích đúng cụm bị bịa. Hiệu chuẩn: ≥ 20 câu chấm tay, judge khớp ≥ 90%; chạy judge ≥ 3 lần mỗi câu, lệch thì báo."
+  # --- Nhóm 3: Metric do AI chấm (LLM judge, có hiệu chuẩn) ---
+  - name: "nguon_chuan_va_khong_bia_thong_tin"
+    definition: "Mọi phòng, giờ, tên người và mã buổi đều khớp dữ liệu thật; khi có sai lệch giữa Khoá 9 (GĐ1) (bản 27/04) và Lịch lớp K9 (bản chép 12/04) / Lịch lab 2604-0805, AI ưu tiên Khoá 9 (GĐ1) làm nguồn chuẩn, cảnh báo bản chép đã cũ, và giữ nguyên trạng thái 'chờ xác nhận' / 'dk:' / 'Online' chứ không tự bịa phòng. Hiệu chuẩn: ≥ 20 câu chấm tay, judge khớp ≥ 90%; chạy judge ≥ 3 lần mỗi câu."
     grader: "llm"
     threshold: "100% câu thuong và kho (không bịa thông tin nào)"
-    why: "Phòng và giờ bị bịa sẽ khiến giảng viên đến sai chỗ; phòng chưa xác nhận là lỗi đã gặp trong data (22 phòng 'chờ xác nhận')."
+    why: "Đối chiếu 2 file cho thấy 44 ô lệch giữa bản chép 12/04 và bản 27/04, 19 buổi Phase 2 lệch trạng thái phòng, và 20 buổi còn 'chờ xác nhận'. Dùng sai bản cũ hoặc bịa phòng sẽ làm giảng viên/coach đến nhầm phòng."
 
   - name: "dung_y_yeu_cau"
-    definition: "Đề xuất đúng phạm vi người hỏi nêu (đúng tuần, đúng chuyên đề, đúng buổi gốc đã nói); LLM judge đối chiếu với pass_criterion và trả PASS/FAIL. Hiệu chuẩn: ≥ 20 câu chấm tay, judge khớp ≥ 85%; chạy ≥ 3 lần mỗi câu."
+    definition: "Đề xuất đúng phạm vi người hỏi nêu (đúng tuần, đúng buổi Sáng/Chiều, đúng chuyên đề, đúng buổi gốc, không gộp nhiều yêu cầu thành một); LLM judge đối chiếu với pass_criterion và trả PASS/FAIL. Hiệu chuẩn: ≥ 20 câu chấm tay, judge khớp ≥ 85%; chạy ≥ 3 lần mỗi câu."
     grader: "llm"
     threshold: "≥ 90% câu thuong"
-    why: "Đề xuất đúng luật nhưng sai ý (ví dụ đổi sang tuần khác khi người hỏi chỉ muốn cùng tuần) vẫn làm lãng phí thời gian của giảng viên."
+    why: "Đề xuất đúng luật nhưng sai phạm vi (vd đổi sang tuần khác hoặc sai chuyên đề) vẫn gây lãng phí thời gian và làm chậm việc chốt lịch vận hành."
