@@ -2,6 +2,7 @@
 import argparse
 import json
 import mimetypes
+import os
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -73,9 +74,10 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(description="Demo lịch tuần")
-    parser.add_argument("--port", type=int, default=8765)
+    parser.add_argument("--host", default="0.0.0.0")
+    parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8765")))
     args = parser.parse_args()
-    with HTTPServer(("127.0.0.1", args.port), Handler) as server:
+    with HTTPServer((args.host, args.port), Handler) as server:
         print(f"http://127.0.0.1:{args.port}", flush=True)
         try:
             server.serve_forever()

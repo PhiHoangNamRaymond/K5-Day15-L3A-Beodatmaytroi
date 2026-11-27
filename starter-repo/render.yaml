@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: beo-dat-may-troi
+    runtime: docker
+    plan: free
+    autoDeployTrigger: commit
+    dockerfilePath: ./starter-repo/Dockerfile
+    dockerContext: ./starter-repo
+    healthCheckPath: /api/weeks
+    envVars:
+      - key: MODEL_PROVIDER
+        value: ""
+      - key: MODEL_NAME
+        sync: false
+      - key: API_KEY
+        sync: false
