@@ -32,10 +32,10 @@
 
 | | |
 |---|---|
-| Dùng để làm gì | Đánh giá tự động & bán tự động hành vi xếp lại lịch và bảo vệ vận hành lớp qua `python run.py eval` theo 9 metric trong `eval/metric_spec.yaml`. |
-| Từ đâu | 21/30 câu (`data_that`, 70%) rút từ các ca và điểm lệch thực tế khi đối chiếu 2 file lịch BTC cấp + 9/30 câu (`tu_viet`, 30%) cho tình huống biên, thiếu thông tin, quyền riêng tư và tấn công vượt quyền / prompt injection. |
-| Xử lý những bước gì | Kiểm toán chéo 2 file để khớp đúng mã buổi, phòng và khung ngày `15/04–08/05/2027`; chia theo 3 nhóm (`12 thuong` · `13 kho` · `5 tu_choi`); kiểm tra hợp lệ bằng `python run.py check`. |
-| Số dòng / số đoạn | 30 câu thử (21 `data_that`, 9 `tu_viet`). |
+| Dùng để làm gì | Đánh giá tự động & bán tự động hành vi điều phối tách phòng vật lý, xếp lại nhân sự và soạn thông báo gấp cho Key Coach qua `python run.py eval` theo 8 metric trong `eval/metric_spec.yaml`. |
+| Từ đâu | 23/30 câu (`data_that`, 77%) rút từ các ca tách phòng, đổi lịch sát giờ và điểm lệch thực tế khi đối chiếu 2 file lịch BTC cấp + 7/30 câu (`tu_viet`, 23%) cho tình huống thiếu thông tin, dữ liệu không tồn tại, quyền riêng tư và tấn công vượt quyền / prompt injection. |
+| Xử lý những bước gì | Kiểm toán chéo 2 file để khớp đúng mã buổi, phòng, giảng viên, định biên coach và khung ngày `15/04–08/05/2027`; chia theo 3 nhóm (`12 thuong` · `13 kho` · `5 tu_choi`); kiểm tra hợp lệ bằng `python run.py check`. |
+| Số dòng / số đoạn | 30 câu thử (23 `data_that`, 7 `tu_viet`). |
 | Phiên bản / ngày lấy | Chốt ngày `27/11/2026` (trước mốc CP2). |
-| Nhãn | Kết hợp `data_that` (21 dòng từ bộ lịch giả lập BTC cấp) + `synthetic` / `tu_viet` (9 dòng viết tay theo kịch bản 4 lớp chỗ khó ở `spec.md` §5, không dùng LLM sinh ngẫu nhiên nên không có random seed; đã kiểm tay 9/9 dòng). |
-| Giới hạn | Chưa có câu `nguoi_dung` trích từ phỏng vấn người thật (sẽ bổ sung nếu có thêm log phỏng vấn trước CP3). |
+| Nhãn | Kết hợp `data_that` (23 dòng từ bộ lịch giả lập BTC cấp) + `synthetic` / `tu_viet` (7 dòng viết tay theo kịch bản 4 lớp chỗ khó ở `spec.md` §5, không dùng LLM sinh ngẫu nhiên nên không có random seed; đã kiểm tay 7/7 dòng). |
+| Giới hạn | Chưa có câu `nguoi_dung` trích nguyên văn từ phỏng vấn người thật (sẽ bổ sung nếu có thêm log phỏng vấn trước CP3). |
