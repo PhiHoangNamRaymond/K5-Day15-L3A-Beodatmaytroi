@@ -1,0 +1,52 @@
+﻿<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lịch giảng dạy tuần · Bèo dạt mây trôi</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/ui.js"></script>
+</head>
+<body>
+<header><div class="shell brand"><span class="mark" aria-hidden="true">B</span><strong>Bèo dạt mây trôi</strong><span id="mode" class="environment">Dữ liệu giả lập</span></div></header>
+<main class="shell">
+  <section class="intro">
+    <div><p class="eyebrow">VẬN HÀNH ĐÀO TẠO</p><h1>Lịch giảng dạy tuần</h1><p>Lập bản nháp phân công và đối chiếu thay đổi phòng trước khi bàn giao BTC.</p></div>
+    <label>Tuần bắt đầu<select id="week"></select></label>
+  </section>
+  <div class="actions">
+    <button id="propose" disabled>Tạo đề xuất lịch</button>
+    <button id="apply" class="secondary" hidden>Áp dụng đề xuất</button>
+    <button id="reset" class="secondary" disabled>Khôi phục</button>
+    <button id="approve" class="secondary" disabled>Duyệt bản bàn giao</button>
+    <button id="export" class="secondary" hidden>Tải bản bàn giao</button>
+  </div>
+  <p id="status" role="status">Đang tải lịch mẫu…</p>
+  <div class="workspace">
+    <section class="panel" aria-labelledby="schedule-heading">
+      <div class="panel-title"><h2 id="schedule-heading">Bản nháp tuần</h2><span id="count"></span></div>
+      <div class="table-scroll" tabindex="0" aria-label="Bảng lịch tuần">
+        <table>
+          <thead><tr><th scope="col">Ngày / Buổi học</th><th scope="col">Phòng</th><th scope="col">Giảng viên</th><th scope="col">Lab coach</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+    <aside class="side">
+      <section class="panel">
+        <div class="panel-title"><h2>Cập nhật phòng</h2></div>
+        <div class="issues">
+          <label class="field">Nguồn cập nhật<select id="update"></select></label>
+          <div id="impact" hidden></div>
+          <div id="notice" hidden><h3>Nháp thông báo cho BTC</h3><pre id="notice-text"></pre><button id="copy" class="secondary">Sao chép nháp</button></div>
+        </div>
+      </section>
+      <section class="panel" aria-labelledby="alerts-heading">
+        <div class="panel-title"><h2 id="alerts-heading">Cảnh báo</h2><span id="issue-count"></span></div>
+        <div id="issues" class="issues"></div>
+      </section>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

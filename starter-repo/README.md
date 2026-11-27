@@ -181,3 +181,13 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
 | 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · link video: chưa có, bổ sung trước CP4 |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
+
+## Chạy website lịch tuần
+
+Trong thư mục này, chạy `python codebase/web_app.py` và mở http://127.0.0.1:8765. Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
+
+1. Chọn **Tạo đề xuất lịch** để xem phòng, giảng viên và lab coach được gợi ý theo nguồn. Mở **Xem nguồn**, áp dụng đề xuất hoặc chọn từng giá trị. Mỗi lần sửa đều được kiểm lại.
+2. Trong **Cập nhật phòng**, chọn ca đổi H209 sang C403. Xem lớp bị ảnh hưởng, nguồn đối chiếu và nháp thông báo cho BTC. Áp dụng đề xuất, duyệt và tải bản bàn giao nếu đủ căn cứ.
+3. Chọn ca thu hồi C402 để kiểm trạng thái chờ phòng mới. Có thể sao chép nháp thông báo tình trạng. Hồ sơ còn phòng chưa xác nhận sẽ bị chặn duyệt.
+
+Website đọc hai tuần giả lập trong `data/weekly-demo.json`. Bản bàn giao được tải thành tệp văn bản. Phiên local dùng dữ liệu mẫu và chưa ghi lịch lên hệ thống của nhóm. Nếu cấu hình `.env` với `MODEL_PROVIDER=openai`, model có thể chọn giữa các phương án hợp lệ. Ngoại tuyến, code chọn phương án theo quy tắc và giao diện ghi rõ chế độ. Bộ benchmark CP2 hiện mô tả nhiều ca điều phối trong dữ liệu BTC. Website này mới được kiểm với hai tuần giả lập bên trên.

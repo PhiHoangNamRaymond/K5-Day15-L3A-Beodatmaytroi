@@ -1,4 +1,4 @@
-"""Nối model — chỗ DUY NHẤT trong bản chạy thử gọi model AI. NHÓM VIẾT phần gọi model thật.
+﻿"""Nối model — chỗ DUY NHẤT trong bản chạy thử gọi model AI. NHÓM VIẾT phần gọi model thật.
 
 Hợp đồng (giữ nguyên để khung đo được token):
     call_model(system: str, user: str) -> dict với 4 khoá
@@ -70,12 +70,9 @@ def call_model(system: str, user: str) -> dict:
         return {"text": "[câu trả lời giả — chưa nối model] " + last[:60], "model": "fake", "tokens_in": 0, "tokens_out": 0}
     if MODEL_PROVIDER == "openai":
         r = call_openai(system, user)
-    elif MODEL_PROVIDER == "anthropic":
-        r = call_claude(system, user)
-    elif MODEL_PROVIDER == "ollama":
-        r = call_ollama(system, user)
-    else:
-        r = call_provider(system, user)       # nhà cung cấp khác: mục 2.4
+    elif MODEL_PROVIDER != "openai":
+        raise ValueError("MODEL_PROVIDER supports fake or openai.")
+
     return {"text": r["text"], "model": MODEL_NAME,
             "tokens_in": int(r["tokens_in"]), "tokens_out": int(r["tokens_out"])}
 
