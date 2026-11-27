@@ -27,11 +27,12 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
   return (
     <tr id={"row-" + row.id}>
       <td className={blockers ? "has-alert" : undefined}>
-        {row.topic}
-        <small>{shortDate(row.date)} · {row.start}–{row.end}</small>
-        <small>{row.class_name} · {row.id}</small>
-        <small className="row-state">{props.pending ? "Chờ rà lại" :
-          blockers ? "Chờ xác minh · " + blockers + " lỗi" : "Đủ căn cứ"}</small>
+        <div className="session-meta">{row.class_name} <span>·</span> {row.id}</div>
+        <strong className="session-title">{row.topic}</strong>
+        <div className="session-meta">{shortDate(row.date)} <span>·</span> {row.start}–{row.end}</div>
+        {props.pending || blockers > 0 ? <span className="row-state">
+          {props.pending ? "Chờ rà lại" : blockers + " lỗi chặn"}
+        </span> : null}
         <details className="source">
           <summary>Xem nguồn</summary>
           <ul>
@@ -70,8 +71,7 @@ export function ScheduleTable(props: Props) {
   const { review, proposal, changes, ...handlers } = props;
   const rows = review?.rows ?? [];
   return <section className="panel" aria-labelledby="schedule-heading">
-    <div className="panel-title"><h2 id="schedule-heading">Bản nháp tuần</h2>
-      <span id="count">{rows.length ? rows.length + " buổi" : ""}</span></div>
+    <div className="panel-title"><h2 id="schedule-heading">Bản nháp tuần</h2></div>
     <div className="table-scroll" tabIndex={0} aria-label="Bảng lịch tuần">
       <table>
         <thead><tr><th scope="col">Ngày / Buổi học</th><th scope="col">Phòng</th>

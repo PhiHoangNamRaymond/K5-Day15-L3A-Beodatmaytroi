@@ -196,8 +196,8 @@ Khi sửa giao diện, giữ server Python chạy trên cổng 8765, rồi chạ
 
 Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
 
-1. Chọn **Tạo đề xuất lịch** để xem phòng, giảng viên và lab coach được gợi ý theo nguồn. Mở **Xem nguồn**, áp dụng đề xuất hoặc chọn từng giá trị. Mỗi lần sửa đều được kiểm lại.
-2. Trong **Cập nhật phòng**, chọn ca đổi H209 sang C403. Xem lớp bị ảnh hưởng, nguồn đối chiếu và nháp thông báo cho BTC. Áp dụng đề xuất, duyệt và tải bản bàn giao nếu đủ căn cứ.
+1. Trong **Lịch tuần**, chọn **Tạo đề xuất lịch** để xem phòng, giảng viên và lab coach được gợi ý theo nguồn. Mở **Xem nguồn**, áp dụng đề xuất hoặc chọn từng giá trị. Mỗi lần sửa đều được kiểm lại.
+2. Trong **Cập nhật phòng**, chọn ca đổi H209 sang C403. Xem lớp bị ảnh hưởng, nguồn đối chiếu và nháp thông báo cho BTC. Nếu đủ căn cứ, mở **Rà soát & bàn giao** để duyệt và tải bản bàn giao.
 3. Chọn ca thu hồi C402 để kiểm trạng thái chờ phòng mới. Có thể sao chép nháp thông báo tình trạng. Hồ sơ còn phòng chưa xác nhận sẽ bị chặn duyệt.
 4. Chọn cập nhật GD-04 thiếu lịch đã thông báo để kiểm trạng thái chưa xác định lớp cần báo lại. Khi muốn thử trùng ca, chọn GV An ở cả GD-01 và GD-02 rồi mở hai liên kết trong cảnh báo để đối chiếu nguồn.
 
@@ -207,6 +207,8 @@ Website đọc hai tuần giả lập trong `data/weekly-demo.json`. Bản bàn 
 
 ## Bàn giao và điểm cần đối chiếu
 
+- [WORKLOAD.md](../WORKLOAD.md) ghi phần FE đã hoàn thành, cách demo và các hợp đồng cần giữ khi tích hợp.
+- [Bố cục ba tab trên Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=15-2) là bản giao diện hiện tại.
 - [Wireframe Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=1-318) mô tả luồng lập lịch tuần và nhánh xử lý khi phòng đổi hoặc bị thu hồi.
 - [Trạng thái bổ sung CP2](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=7-3) minh họa đề xuất theo từng buổi, lỗi trùng ca và ca thiếu bản lịch đã thông báo.
 - Spec CP2 và `eval/metric_spec.yaml` đang lệch ngưỡng ở `hoi_lai_khi_thieu`, `ban_nhap_thong_bao_va_checklist_dong_bo` và `dung_y_yeu_cau`. Spec trên `main` ghi 80%, file metric ghi 90%. Đối chiếu bản nhóm đã nộp CP2 trước khi chấm hoặc báo điểm.
