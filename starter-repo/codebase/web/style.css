@@ -57,6 +57,12 @@ td.has-alert{box-shadow:inset 3px 0 #c4722c}
   td select,td input{width:100%;min-width:0;padding:6px}
 }
 .side{display:grid;gap:17px;min-width:0}
+.row-state{font-weight:700}
+.has-alert .row-state{color:#844719}
+.row-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.row-actions button{font-size:.73rem;padding:4px 7px}
+.issue a{color:#075c50;font-size:.81rem;text-underline-offset:2px}
+tr:target{outline:2px solid #328bca;outline-offset:-2px;scroll-margin-block:16px}
 .field{display:grid;gap:6px;font-weight:650}
 .field select{width:100%;min-width:0}
 #impact{border-left:3px solid #219480;padding:3px 9px}

@@ -9,7 +9,8 @@
     ],
     "updates": [
       {"id":"UP-01","label":"Đã xác nhận đổi H209 sang C403","session":"GD-01","room":"C403","source":"BTC/MOCK-26-01"},
-      {"id":"UP-02","label":"Thu hồi C402, chưa có phòng thay thế","session":"GD-03","room":"","source":"BTC/MOCK-28-02"}
+      {"id":"UP-02","label":"Thu hồi C402, chưa có phòng thay thế","session":"GD-03","room":"","source":"BTC/MOCK-28-02"},
+      {"id":"UP-03","label":"Cập nhật phòng cho GD-04, thiếu lịch đã thông báo","session":"GD-04","room":"","source":"BTC/MOCK-29-03"}
     ]
   },
   "2027-05-03": {

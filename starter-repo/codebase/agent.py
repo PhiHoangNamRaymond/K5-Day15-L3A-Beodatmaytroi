@@ -56,7 +56,7 @@ def weekly_review(week_id, changes, update_id="", propose=False):
             proposal = plans[choice]
     issues = validate_schedule_draft(rows)
     notice = None
-    if update:
+    if update and update["old_room"]:
         timing = f"{update['date']} · {update['start']}–{update['end']}"
         room = update["room"]
         summary = f"chuyển từ {update['old_room']} sang {room}" if room else (

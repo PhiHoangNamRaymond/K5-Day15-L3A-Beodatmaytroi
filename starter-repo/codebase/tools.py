@@ -29,7 +29,7 @@ def diff_room_updates(rows: list, updates: list, update_id: str) -> dict:
     if update is None:
         raise ValueError("Cập nhật phòng không thuộc tuần đã chọn.")
     row = next(item for item in rows if item["id"] == update["session"])
-    return dict(update, old_room=row["published_room"], class_name=row["class_name"],
+    return dict(update, old_room=row.get("published_room"), class_name=row["class_name"],
                 date=row["date"], start=row["start"], end=row["end"])
 
 
@@ -42,6 +42,7 @@ def draft_rows(week, changes, update):
         if update and update["session"] == row["id"]:
             row.update(room_options=[update["room"]] if update["room"] else [],
                        room=update["room"], update_source=update["source"])
+            row["missing_published"] = not update["old_room"]
         fields = changes.get(row["id"], {})
         if not isinstance(fields, dict) or fields.keys() - set(FIELDS):
             raise ValueError("Bản nháp chứa trường ngoài phạm vi chỉnh sửa.")
@@ -62,6 +63,8 @@ def validate_schedule_draft(rows: list) -> list:
         issues.append({"sessions": sessions, "field": field, "message": message})
 
     for row in rows:
+        if row.get("missing_published"):
+            add(row, "published", "Bổ sung bản lịch đã thông báo để xác định lớp cần báo lại.")
         if row["format"] == "online":
             if not row.get("online_source"):
                 add(row, "format", "Chưa có nguồn xác nhận chuyển online và đường dẫn học.")
@@ -82,5 +85,6 @@ def validate_schedule_draft(rows: list) -> list:
             if field == "room" and (left["format"] != "offline" or right["format"] != "offline"):
                 continue
             if left[field] and left[field] == right[field]:
-                add(left, field, f"{name} {left[field]} trùng giờ ở hai buổi.", right)
+                overlap = f"{max(left['start'], right['start'])}–{min(left['end'], right['end'])}"
+                add(left, field, f"{name} {left[field]} trùng ca {overlap}.", right)
     return issues

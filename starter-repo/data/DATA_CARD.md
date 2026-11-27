@@ -42,4 +42,4 @@
 
 ## Bản web local · fixture lịch tuần
 
-`data/weekly-demo.json` gồm 7 buổi trong 2 tuần và 2 sự kiện đổi hoặc thu hồi phòng. Bảng phòng xác nhận, bản đã thông báo và đăng ký theo buổi được viết tay cho demo. Dữ liệu trong fixture là giả lập, không dùng làm bằng chứng pain. Đường dẫn online dùng miền mẫu. Demo tách dữ liệu này khỏi hai file XLSX và bộ benchmark CP2.
+`data/weekly-demo.json` gồm 7 buổi trong 2 tuần và 3 cập nhật mẫu: đổi phòng đã xác nhận, thu hồi chưa có phòng thay thế và cập nhật thiếu bản lịch đã thông báo. Bảng phòng xác nhận, bản đã thông báo và đăng ký theo buổi được viết tay cho demo. Dữ liệu trong fixture là giả lập, không dùng làm bằng chứng pain. Đường dẫn online dùng miền mẫu. Demo tách dữ liệu này khỏi hai file XLSX và bộ benchmark CP2.
