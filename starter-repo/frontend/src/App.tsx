@@ -1,4 +1,5 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Icon } from "./components/Icon";
 import { ScheduleSidebar } from "./components/ScheduleSidebar";
 import { ScheduleTable } from "./components/ScheduleTable";
 import { scheduleApi } from "./features/schedule/api";
@@ -151,31 +152,43 @@ export default function App() {
   const rowCount = review?.rows.length ?? 0;
   const needsAttention = new Set(review?.issues.flatMap((issue) => issue.sessions)).size;
 
-  return <>
-    <header className="topbar"><div className="shell brand"><span className="mark" aria-hidden="true">B</span>
-      <strong>Bèo dạt mây trôi</strong><span id="mode" className="environment">
-        {mode && mode !== "fake" ? "Demo có model" : "Dữ liệu giả lập"}
-      </span></div></header>
-    <main className="shell">
+  return <div className="app-layout">
+    <aside className="app-sidebar">
+      <a className="sidebar-brand" href="#main-content" aria-label="Bèo dạt mây trôi — đến nội dung chính"><span className="brand-symbol"><Icon name="building" /></span><span>Bèo dạt mây trôi<small>Điều phối học vụ</small></span></a>
+      <div className="sidebar-course"><span className="course-symbol">K5</span><div><strong>AI20K · Khóa 5</strong><small>Không gian điều phối</small></div></div>
+      <nav className="sidebar-nav" aria-label="Các bước lập lịch">
+        {views.map(([id, label]) => <button key={id} type="button" aria-current={view === id ? "page" : undefined} onClick={() => setView(id)}>
+          <Icon name={id === "schedule" ? "calendar" : id === "changes" ? "building" : "check"} /><span>{label}</span>
+          {id === "review" && !pending && !!needsAttention && <span className="nav-count">{needsAttention}</span>}
+        </button>)}
+      </nav>
+      <div className="sidebar-note"><Icon name="shield" /><strong>Bạn là người quyết định</strong><p>Kiểm tra nguồn và duyệt các thay đổi trước khi bàn giao lịch.</p></div>
+      <div className="sidebar-user"><span className="avatar">KC</span><span><strong>Key coach</strong><small>Điều phối lịch giảng dạy</small></span></div>
+    </aside>
+    <div className="main-area">
+    <header className="topbar"><div className="breadcrumb"><span>Điều phối học vụ</span><span aria-hidden="true">/</span><strong>{views.find(([id]) => id === view)?.[1]}</strong></div>
+      <div className="topbar-right"><span id="mode" className="environment">{mode && mode !== "fake" ? "Có kết nối model" : "Phiên trải nghiệm"}</span><span className="topbar-avatar" aria-label="Key coach">KC</span></div>
+    </header>
+    <main className="shell" id="main-content">
       <section className="intro">
-        <div><h1>Lịch giảng dạy tuần</h1><p>Phân công, rà soát và bàn giao lịch cho BTC.</p></div>
+        <div><h1>{view === "schedule" ? "Lịch giảng dạy" : view === "changes" ? "Cập nhật phòng học" : "Rà soát & bàn giao"}</h1><p>{view === "schedule" ? "Một tuần học, mọi phân công ở đúng chỗ." : view === "changes" ? "Đối chiếu thay đổi phòng và chuẩn bị thông báo cho lớp." : "Xử lý các điểm cần xác minh trước khi duyệt lịch."}</p></div>
         <label className="week-control">Tuần bắt đầu
-          <select id="week" value={draft.week} disabled={busy || !weeks.length}
+          <span className="week-select"><Icon name="calendar" /><select id="week" value={draft.week} disabled={busy || !weeks.length}
             onChange={(event) => void run(() => load(event.target.value))}>
             {weeks.map((week) => <option key={week} value={week}>{shortDate(week)}</option>)}
-          </select>
+          </select></span>
         </label>
       </section>
       <section className="workbar" aria-label="Tiến độ bản nháp">
       <div className="progress">
-        <div><strong>{rowCount}</strong><span>Buổi học</span></div>
-        <div><strong>{pending ? "–" : rowCount - needsAttention}</strong><span>Đủ căn cứ</span></div>
-        <div className={needsAttention && !pending ? "progress-warning" : ""}><strong>{pending ? "–" : needsAttention}</strong><span>Cần xác minh</span></div>
+        <div><span className="stat-icon"><Icon name="calendar" /></span><span className="stat-copy"><strong>{rowCount}</strong><span>Buổi học trong tuần</span></span></div>
+        <div><span className="stat-icon ready"><Icon name="check" /></span><span className="stat-copy"><strong>{pending ? "–" : rowCount - needsAttention}</strong><span>Buổi đủ căn cứ</span></span></div>
+        <div className={needsAttention && !pending ? "progress-warning" : ""}><span className="stat-icon warning"><Icon name="alert" /></span><span className="stat-copy"><strong>{pending ? "–" : needsAttention}</strong><span>Buổi cần xác minh</span></span></div>
       </div>
       <div className="actions" hidden={view === "changes"}>
         {view === "schedule" ? <>
         <button id="propose" className={proposalIds.length || approved ? "secondary" : "primary"}
-          disabled={busy || pending || !review} onClick={() => void run(propose)}>Tạo đề xuất lịch</button>
+          disabled={busy || pending || !review} onClick={() => void run(propose)}><Icon name="spark" />{busy ? "Đang xử lý…" : "Tạo đề xuất lịch"}</button>
         <button id="apply" className="primary" hidden={!proposalIds.length} disabled={busy}
           onClick={() => apply(proposalIds)}>Áp dụng đề xuất</button>
         <button id="dismiss" className="secondary" hidden={!proposalIds.length} disabled={busy}
@@ -195,14 +208,7 @@ export default function App() {
         </>}
       </div>
       </section>
-      <nav className="views" aria-label="Các bước lập lịch">
-        {views.map(([id, label]) => <button key={id} type="button"
-          aria-current={view === id ? "page" : undefined}
-          onClick={() => setView(id)}>{label}
-          {id === "review" && !pending && !!needsAttention && <span className="view-count">{needsAttention}</span>}
-        </button>)}
-      </nav>
-      <p id="status" role="status">{status}</p>
+      <div className="statusbar"><Icon name={busy ? "clock" : "info"} /><p id="status" role="status">{status}</p><span className="draft-state">{approved ? "Đã duyệt" : "Bản nháp"}</span></div>
       <div className={view === "schedule" ? "workspace" : "workspace focused-view"} aria-busy={busy}>
         {view === "schedule" && <ScheduleTable review={review} proposal={proposal} changes={draft.changes} busy={busy} pending={pending}
           onEdit={edit} onApply={(id) => apply([id])} onSkip={(id) => setProposal(withoutSuggestion(proposal, id))} />}
@@ -214,6 +220,8 @@ export default function App() {
             setStatus("Đã sao chép nháp thông báo.");
           })} />}
       </div>
+      <footer className="page-footer"><span>Lịch chỉ được bàn giao sau khi bạn duyệt.</span><span>Bèo dạt mây trôi</span></footer>
     </main>
-  </>;
+    </div>
+  </div>;
 }

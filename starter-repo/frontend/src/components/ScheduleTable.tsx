@@ -1,4 +1,5 @@
-﻿import { shortDate } from "../features/schedule/types";
+import { Icon } from "./Icon";
+import { shortDate } from "../features/schedule/types";
 import type { Assignment, Changes, Review, Session } from "../features/schedule/types";
 
 interface Props {
@@ -28,12 +29,12 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
   return (
     <tr id={"row-" + row.id}>
       <td className={blockers ? "has-alert" : undefined}>
-        <div className="session-meta">{row.class_name} <span>·</span> {row.id}</div>
+        <div className="session-meta"><span className="class-badge">{row.class_name}</span><span className="session-id">{row.id}</span></div>
         <strong className="session-title">{row.topic}</strong>
-        <div className="session-meta">{shortDate(row.date)} <span>·</span> {row.start}–{row.end}</div>
+        <div className="session-time"><Icon name="clock" />{shortDate(row.date)}<span className="time-divider" />{row.start}–{row.end}</div>
         {props.pending || blockers > 0 ? <span className="row-state">
-          {props.pending ? "Chờ rà lại" : blockers + " lỗi chặn"}
-        </span> : null}
+          <Icon name="alert" />{props.pending ? "Chờ rà lại" : blockers + " điểm cần xử lý"}
+        </span> : <span className="row-ready"><Icon name="check" />Đủ căn cứ</span>}
         <details className="source">
           <summary>Xem nguồn</summary>
           <ul>
@@ -54,7 +55,7 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
         const suggested = suggestion?.[field];
         const hasSuggestion = suggested && suggested !== value;
         return <td key={field} data-label={title} className={hasSuggestion ? "proposal" : undefined}>
-          {field === "room" && row.format === "online" ? "Online" : (
+          {field === "room" && row.format === "online" ? <span className="online-badge"><Icon name="video" />Online</span> : (
             <select aria-label={title + " " + row.id} value={hasSuggestion ? "__suggestion__" : value} disabled={props.busy}
               onChange={(event) => props.onEdit(row.id, { [field]: event.target.value })}>
               {hasSuggestion && <option value="__suggestion__" disabled>{suggested} · Đề xuất</option>}
@@ -94,12 +95,12 @@ export function ScheduleTable(props: Props) {
   const { review, proposal, changes, ...handlers } = props;
   const rows = review?.rows ?? [];
   return <section className="panel" aria-labelledby="schedule-heading">
-    <div className="panel-title"><h2 id="schedule-heading">Bản nháp tuần</h2></div>
+    <div className="panel-title"><div><h2 id="schedule-heading">Bản nháp lịch tuần</h2><p>Rà soát phòng, giảng viên và coach cho từng buổi học.</p></div><span className="panel-count">{rows.length} buổi học</span></div>
     <div className="table-scroll" tabIndex={0} aria-label="Bảng lịch tuần">
       <table>
         <thead><tr><th scope="col">Ngày / Buổi học</th><th scope="col">Phòng</th>
           <th scope="col">Giảng viên</th><th scope="col">Lab coach</th></tr></thead>
-        <tbody id="rows">{rows.map((row) => (
+        <tbody id="rows">{!rows.length && <tr><td colSpan={4} className="empty-state"><Icon name="calendar" /><strong>{props.busy ? "Đang tải lịch giảng dạy…" : "Chưa có buổi học"}</strong><p>{props.busy ? "Thông tin phân công sẽ xuất hiện tại đây." : "Chọn tuần có dữ liệu để bắt đầu lập lịch."}</p></td></tr>}{rows.map((row) => (
           <SessionRow key={row.id} row={row} suggestion={proposal[row.id]} edit={props.pending ? changes[row.id] : undefined}
             blockers={review?.issues.filter((issue) => issue.sessions.includes(row.id)).length ?? 0} {...handlers} />
         ))}</tbody>

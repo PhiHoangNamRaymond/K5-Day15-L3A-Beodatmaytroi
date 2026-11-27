@@ -7,6 +7,7 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 | Việc | Công cụ AI | AI làm gì | Người kiểm/sửa gì | Ai phụ trách |
 |---|---|---|---|---|
 | Code bản chạy thử | | | | |
+| Thiết kế và code giao diện lịch tuần | Codex; skill frontend-design của Anthropic | Thiết kế bố cục, màu sắc, kiểu chữ và component React/CSS; kiểm tra build, TypeScript và luồng giao diện trên localhost | Kiểm tra tự động và trình duyệt đã chạy; nhóm cần xem lại giao diện và giải thích phần có tên mình trước khi nộp | Nguyễn Vũ Hoàng: FE; Phí Hoàng Nam: UI/UX và tích hợp |
 | Prompt / thiết kế lời gọi mô hình | | | | |
 | Đào data (viết script đếm, gợi ý nhãn) | | | Kiểm tay __ dòng, khớp __ | |
 | Rà câu hỏi phỏng vấn / khảo sát | | Chỉ rà câu dẫn dắt | | |
