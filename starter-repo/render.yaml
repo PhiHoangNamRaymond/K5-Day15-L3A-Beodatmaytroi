@@ -9,7 +9,7 @@ services:
     healthCheckPath: /api/weeks
     envVars:
       - key: MODEL_PROVIDER
-        value: ""
+        sync: false
       - key: MODEL_NAME
         sync: false
       - key: API_KEY
