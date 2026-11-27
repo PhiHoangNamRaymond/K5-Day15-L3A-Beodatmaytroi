@@ -6,7 +6,7 @@
 Code, dữ liệu demo và hồ sơ nhóm nằm trong [starter-repo](starter-repo/README.md). Frontend dùng React và TypeScript. Chạy các lệnh dưới đây từ thư mục gốc rồi mở http://127.0.0.1:8765.
 
 ```powershell
-npm --prefix starter-repo/frontend ci
+npm --prefix starter-repo/frontend ci --include=dev
 npm --prefix starter-repo/frontend run build
 python starter-repo/codebase/web_app.py
 ```

@@ -187,12 +187,14 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 Web dùng React, TypeScript và Vite. Dùng Node.js 22.12 trở lên và Python 3.10 trở lên. Chạy từ thư mục `starter-repo`, sau đó mở http://127.0.0.1:8765.
 
 ```powershell
-npm --prefix frontend ci
+npm --prefix frontend ci --include=dev
 npm --prefix frontend run build
 python codebase/web_app.py
 ```
 
 Khi sửa giao diện, giữ server Python chạy trên cổng 8765, rồi chạy `npm --prefix frontend run dev` ở terminal khác và mở địa chỉ Vite in ra. Vite chuyển tiếp `/api` về Python. Mã UI ở `frontend/src`, kiểu dữ liệu và API lịch tuần ở `frontend/src/features/schedule`.
+
+Nếu đang ở `starter-repo/frontend` và gặp lỗi `'vite' is not recognized`, chạy `npm ci --include=dev` rồi chạy lại `npm run dev`. Vite đã có trong `devDependencies`. Cờ `--include=dev` cài cả Vite khi npm đang được cấu hình chỉ cài dependency production.
 
 Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
 

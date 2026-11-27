@@ -13,7 +13,7 @@
 Từ thư mục gốc, chạy:
 
 ```powershell
-npm --prefix starter-repo/frontend ci
+npm --prefix starter-repo/frontend ci --include=dev
 npm --prefix starter-repo/frontend run build
 python starter-repo/codebase/web_app.py
 ```
