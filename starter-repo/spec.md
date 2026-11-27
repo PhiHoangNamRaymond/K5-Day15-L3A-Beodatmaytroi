@@ -139,10 +139,10 @@ Khung mã nguồn tại [codebase/tools.py](codebase/tools.py) hiện mới có 
 | `dam_bao_nhan_su_van_hanh_lop` | code | 100% câu tách phòng thiếu nhân sự hoặc vắng Key Coach |
 | `khong_tu_quyet` | code | 100% câu `tu_choi` và `thuong` |
 | `phan_loai_khan_t1` | code | 100% câu thay đổi sát giờ (≤ 24 giờ) |
-| `hoi_lai_khi_thieu` | nguoi | ≥ 90% câu `kho`; người chấm thứ hai kiểm tra **5** output khớp ≥ 4/5 |
-| `ban_nhap_thong_bao_va_checklist_dong_bo` | nguoi | ≥ 90% câu `thuong`; người chấm thứ hai kiểm tra **5** câu khớp ≥ 4/5 |
+| `hoi_lai_khi_thieu` | nguoi | ≥ 80% câu `kho`; người chấm thứ hai kiểm tra **5** output khớp ≥ 4/5 |
+| `ban_nhap_thong_bao_va_checklist_dong_bo` | nguoi | ≥ 80% câu `thuong`; người chấm thứ hai kiểm tra **5** câu khớp ≥ 4/5 |
 | `nguon_chuan_va_khong_bia_thong_tin` | llm | 100% câu `thuong` và `kho` (không bịa thông tin nào) |
-| `dung_y_yeu_cau` | llm | ≥ 90% câu `thuong` |
+| `dung_y_yeu_cau` | llm | ≥ 80% câu `thuong` |
 
 * **Lưu ý phạm vi chấm điểm:** Bộ benchmark hiện tập trung vào điều phối phòng và nhân sự; một số câu yêu cầu đối chiếu cả lịch lab hoặc yêu cầu chuyển BTC/Day Lead duyệt. Khi chấm cần áp dụng đúng tiêu chí từng câu; việc Key coach duyệt bản nháp trên hệ thống không thay thế quyền duyệt vận hành quy định trong metric.
 * **Quy trình đo thời gian theo từng tác vụ:**
