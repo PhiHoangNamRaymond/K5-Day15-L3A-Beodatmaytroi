@@ -1,5 +1,5 @@
 ﻿import { shortDate } from "../features/schedule/types";
-import type { Assignment, AssignmentField, Changes, Review, Session } from "../features/schedule/types";
+import type { Assignment, Changes, Review, Session } from "../features/schedule/types";
 
 interface Props {
   review?: Review;
@@ -7,7 +7,7 @@ interface Props {
   changes: Changes;
   busy: boolean;
   pending: boolean;
-  onEdit: (id: string, field: AssignmentField, value: string) => void;
+  onEdit: (id: string, changes: Assignment) => void;
   onApply: (id: string) => void;
   onSkip: (id: string) => void;
 }
@@ -15,7 +15,6 @@ interface Props {
 const columns = [
   ["room", "room_options", "Phòng"],
   ["teacher", "teachers", "Giảng viên"],
-  ["coach", "coaches", "Lab coach"],
 ] as const;
 
 function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "review" | "proposal" | "changes"> & {
@@ -24,6 +23,8 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
   suggestion?: Assignment;
   edit?: Assignment;
 }) {
+  const coaches = edit?.coach ?? row.coach;
+  const suggestedCoaches = suggestion?.coach?.filter((coach) => !coaches.includes(coach)) ?? [];
   return (
     <tr id={"row-" + row.id}>
       <td className={blockers ? "has-alert" : undefined}>
@@ -54,15 +55,37 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
         const hasSuggestion = suggested && suggested !== value;
         return <td key={field} data-label={title} className={hasSuggestion ? "proposal" : undefined}>
           {field === "room" && row.format === "online" ? "Online" : (
-            <select aria-label={title + " " + row.id} value={value} disabled={props.busy}
-              onChange={(event) => props.onEdit(row.id, field, event.target.value)}>
+            <select aria-label={title + " " + row.id} value={hasSuggestion ? "__suggestion__" : value} disabled={props.busy}
+              onChange={(event) => props.onEdit(row.id, { [field]: event.target.value })}>
+              {hasSuggestion && <option value="__suggestion__" disabled>{suggested} · Đề xuất</option>}
               <option value="">Chưa chọn</option>
               {row[options].map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
           )}
-          {hasSuggestion && <small>Đề xuất {suggested}</small>}
         </td>;
       })}
+      <td data-label="Lab coach" className={suggestedCoaches.length ? "proposal" : undefined}>
+        <details className="coach-picker">
+          <summary aria-label={"Lab coach " + row.id}>
+            {suggestedCoaches.length ? (
+              <>{suggestedCoaches.join(", ")} <span>· Đề xuất</span></>
+            ) : coaches.join(", ") || "Chưa chọn"}
+          </summary>
+          <fieldset disabled={props.busy}>
+            <legend className="sr-only">Chọn lab coach {row.id}</legend>
+            {row.coaches.map((coach) => (
+              <label key={coach}>
+                <input type="checkbox" checked={coaches.includes(coach)} onChange={(event) => {
+                  const selected = event.currentTarget.checked;
+                  props.onEdit(row.id, { coach: selected ? [...coaches, coach] : coaches.filter((name) => name !== coach) });
+                }} />
+                {coach}{suggestedCoaches.includes(coach) ? " · Đề xuất" : ""}
+              </label>
+            ))}
+            {!row.coaches.length && <span>Chưa có coach đăng ký</span>}
+          </fieldset>
+        </details>
+      </td>
     </tr>
   );
 }

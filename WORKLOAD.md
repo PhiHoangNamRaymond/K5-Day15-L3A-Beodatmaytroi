@@ -5,6 +5,7 @@
 - Chuyển giao diện lịch tuần sang React, TypeScript và Vite. Mã giao diện nằm ở `starter-repo/frontend/src`.
 - Dựng ba tab dùng chung bản nháp: Lịch tuần, Cập nhật phòng, Rà soát & bàn giao. Cảnh báo mở đúng buổi và nguồn trong bảng lịch.
 - Hoàn thiện thao tác áp dụng hoặc bỏ qua đề xuất từng buổi, sửa phân công và rà lại. Luồng đổi phòng hiển thị phòng cũ, phòng mới và nháp thông báo khi có căn cứ.
+- Hiển thị đề xuất ngay trong ô chọn. Một buổi có thể phân nhiều lab coach đăng ký đúng ca. Rà xung đột theo từng người và xuất đầy đủ danh sách trong bản bàn giao.
 - Chặn duyệt khi trùng ca hoặc thiếu nguồn. Sau khi duyệt có thể tải bản bàn giao cho BTC.
 - [Bố cục ba tab trên Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=15-2) phản ánh bản FE hiện tại. Sơ đồ CP2 nằm bên dưới để đối chiếu.
 
@@ -29,3 +30,5 @@ Mở http://127.0.0.1:8765, chọn tuần 26/04/2027. Thử tạo đề xuất �
 | Đánh giá và chi phí | Chạy hai lượt benchmark chính thức, chấm và mô phỏng từ token đo thật. Kết quả kiểm giao diện chỉ phản ánh luồng chạy bằng fixture. |
 
 Nhánh bàn giao là `hoang/weekly-demo`.
+
+Trường `coach` trong dòng lịch, đề xuất và bản bàn giao là mảng tên. API vẫn nhận chuỗi tên đơn từ bản nháp cũ và chuẩn hóa thành mảng.

@@ -1,5 +1,4 @@
-export type AssignmentField = "room" | "teacher" | "coach";
-export type Assignment = Partial<Record<AssignmentField, string>>;
+export type Assignment = { room?: string; teacher?: string; coach?: string[] };
 export type Changes = Record<string, Assignment>;
 
 export interface Session {
@@ -12,7 +11,7 @@ export interface Session {
   format: "online" | "offline";
   room: string;
   teacher: string;
-  coach: string;
+  coach: string[];
   room_options: string[];
   teachers: string[];
   coaches: string[];

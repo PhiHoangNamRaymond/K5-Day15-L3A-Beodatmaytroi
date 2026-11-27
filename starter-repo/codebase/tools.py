@@ -9,6 +9,16 @@ DATA = Path(__file__).resolve().parents[1] / "data" / "weekly-demo.json"
 FIELDS = ("room", "teacher", "coach", "format")
 
 
+def coach_list(value):
+    if isinstance(value, str):
+        value = [value] if value.strip() else []
+    if not isinstance(value, list) or any(
+        not isinstance(name, str) or not name.strip() or len(name) > 80 for name in value
+    ):
+        raise ValueError("Lab coach phải là danh sách tên hợp lệ.")
+    return list(dict.fromkeys(name.strip() for name in value))
+
+
 def weeks():
     return json.loads(DATA.read_text(encoding="utf-8-sig"))
 
@@ -46,9 +56,11 @@ def draft_rows(week, changes, update):
         fields = changes.get(row["id"], {})
         if not isinstance(fields, dict) or fields.keys() - set(FIELDS):
             raise ValueError("Bản nháp chứa trường ngoài phạm vi chỉnh sửa.")
-        if any(not isinstance(value, str) or len(value) > 80 for value in fields.values()):
+        if any(not isinstance(value, str) or len(value) > 80
+               for key, value in fields.items() if key != "coach"):
             raise ValueError("Giá trị chỉnh sửa phải là văn bản tối đa 80 ký tự.")
-        row.update({key: value.strip() for key, value in fields.items()})
+        row.update({key: value.strip() for key, value in fields.items() if key != "coach"})
+        row["coach"] = coach_list(fields.get("coach", source["coach"]))
         rows.append(row)
     return rows
 
@@ -74,17 +86,20 @@ def validate_schedule_draft(rows: list) -> list:
             add(row, "format", "Hình thức chưa khớp nguồn xác nhận.")
         elif row["room"] not in row["room_options"]:
             add(row, "room", "Chưa có phòng khớp nguồn xác nhận.")
-        for field, choices, name in (("teacher", "teachers", "giảng viên"), ("coach", "coaches", "lab coach")):
-            if row[field] not in row[choices]:
-                add(row, field, f"Chọn {name} có đăng ký đúng buổi.")
+        if row["teacher"] not in row["teachers"]:
+            add(row, "teacher", "Chọn giảng viên có đăng ký đúng buổi.")
+        if not row["coach"] or not set(row["coach"]).issubset(row["coaches"]):
+            add(row, "coach", "Chọn lab coach có đăng ký đúng buổi.")
 
     for left, right in combinations(rows, 2):
         if left["date"] != right["date"] or max(left["start"], right["start"]) >= min(left["end"], right["end"]):
             continue
-        for field, name in (("room", "Phòng"), ("teacher", "Giảng viên"), ("coach", "Lab coach")):
+        overlap = f"{max(left['start'], right['start'])}–{min(left['end'], right['end'])}"
+        for field, name in (("room", "Phòng"), ("teacher", "Giảng viên")):
             if field == "room" and (left["format"] != "offline" or right["format"] != "offline"):
                 continue
             if left[field] and left[field] == right[field]:
-                overlap = f"{max(left['start'], right['start'])}–{min(left['end'], right['end'])}"
                 add(left, field, f"{name} {left[field]} trùng ca {overlap}.", right)
+        for coach in sorted(set(left["coach"]).intersection(right["coach"])):
+            add(left, "coach", f"Lab coach {coach} trùng ca {overlap}.", right)
     return issues

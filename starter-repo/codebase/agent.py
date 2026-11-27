@@ -28,7 +28,9 @@ def candidate_plans(rows):
         row = rows[len(assigned)]
         rooms = row["room_options"] if row["format"] == "offline" else [""]
         ordered_rooms = sorted(rooms, key=lambda room: room != row.get("published_room"))
-        for room, teacher, coach in product(ordered_rooms or [""], row["teachers"] or [""], row["coaches"] or [""]):
+        current_coaches = [coach for coach in row["coach"] if coach in row["coaches"]]
+        coach_options = [current_coaches] if current_coaches else [[coach] for coach in row["coaches"]]
+        for room, teacher, coach in product(ordered_rooms or [""], row["teachers"] or [""], coach_options or [[]]):
             proposal = dict(row, room=room, teacher=teacher, coach=coach)
             if not any(len(issue["sessions"]) > 1 for issue in validate_schedule_draft([*assigned, proposal])):
                 extend([*assigned, proposal])
@@ -82,7 +84,7 @@ def answer(text: str) -> dict:
         return {"output": str(error)}
     lines = [f"Tuần {week} · {len(result['rows'])} buổi"]
     if result["proposal"]:
-        lines.extend(f"{key} · {item['room'] or 'xem hình thức và nguồn'} · {item['teacher']} · {item['coach']}"
+        lines.extend(f"{key} · {item['room'] or 'xem hình thức và nguồn'} · {item['teacher']} · {', '.join(item['coach'])}"
                      for key, item in result["proposal"].items())
     else:
         lines.extend(f"{', '.join(issue['sessions'])} · {issue['message']}" for issue in result["issues"])

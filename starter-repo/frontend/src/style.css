@@ -114,7 +114,17 @@ tbody tr:last-child td { border-bottom: 0; }
 td select { width: 100%; min-width: 0; font-size: .85rem; }
 td small { display: block; font-size: .76rem; margin-top: 4px; }
 td.proposal { background: #f6f2ff; }
-td.proposal small { color: var(--accent-dark); font-weight: 650; }
+td.proposal select, td.proposal .coach-picker > summary { border-color: #a996e3; color: var(--accent-dark); }
+.coach-picker > summary {
+  cursor: pointer; border: 1px solid #cbd3e3; border-radius: 8px; min-height: 38px;
+  padding: 7px 10px; background: var(--paper); font-size: .85rem; overflow-wrap: anywhere;
+}
+.coach-picker fieldset {
+  display: grid; gap: 4px; margin: 5px 0 0; padding: 5px;
+  border: 1px solid var(--line); border-radius: 8px; min-width: 0; background: var(--paper);
+}
+.coach-picker label { display: flex; align-items: baseline; gap: 5px; }
+.coach-picker input { flex-shrink: 0; accent-color: var(--accent); }
 tr:target { outline: 2px solid #7860db; outline-offset: -2px; scroll-margin-block: 16px; }
 .source { font-size: .8rem; margin-top: 5px; color: var(--accent-dark); }
 .source summary { cursor: pointer; font-weight: 650; }

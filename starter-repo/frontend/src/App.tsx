@@ -3,7 +3,7 @@ import { ScheduleSidebar } from "./components/ScheduleSidebar";
 import { ScheduleTable } from "./components/ScheduleTable";
 import { scheduleApi } from "./features/schedule/api";
 import { shortDate } from "./features/schedule/types";
-import type { AssignmentField, Changes, Draft, Handoff, Review } from "./features/schedule/types";
+import type { Assignment, Changes, Draft, Handoff, Review } from "./features/schedule/types";
 
 type View = "schedule" | "changes" | "review";
 const views: ReadonlyArray<[View, string]> = [
@@ -21,7 +21,7 @@ function withoutSuggestion(proposal: Changes, id: string) {
 function download(handoff: Handoff) {
   const rows = handoff.rows.map((row) =>
     [shortDate(row.date), row.start + "–" + row.end, row.class_name, row.topic,
-      row.room || row.online_source, row.teacher, row.coach].join(" · "));
+      row.room || row.online_source, row.teacher, row.coach.join(", ")].join(" · "));
   const text = ["Bản bàn giao BTC · Tuần " + shortDate(handoff.week), ...rows, "", handoff.notice || ""];
   const url = URL.createObjectURL(new Blob([text.join("\r\n")], { type: "text/plain;charset=utf-8" }));
   const link = document.createElement("a");
@@ -121,8 +121,12 @@ export default function App() {
     const changes: Changes = {};
     for (const row of result.rows) {
       const suggestion = result.proposal?.[row.id];
-      if (suggestion && (["room", "teacher", "coach"] as const)
-        .some((field) => suggestion[field] !== undefined && suggestion[field] !== row[field])) {
+      if (suggestion && (
+        (suggestion.room !== undefined && suggestion.room !== row.room) ||
+        (suggestion.teacher !== undefined && suggestion.teacher !== row.teacher) ||
+        (suggestion.coach !== undefined && (suggestion.coach.length !== row.coach.length ||
+          suggestion.coach.some((coach) => !row.coach.includes(coach))))
+      )) {
         changes[row.id] = suggestion;
       }
     }
@@ -136,8 +140,8 @@ export default function App() {
       "Đã tạo đề xuất theo quy tắc. Kiểm tra nguồn trước khi áp dụng.");
   }
 
-  function edit(id: string, field: AssignmentField, value: string) {
-    const changes = { ...draft.changes, [id]: { ...draft.changes[id], [field]: value } };
+  function edit(id: string, patch: Assignment) {
+    const changes = { ...draft.changes, [id]: { ...draft.changes[id], ...patch } };
     setProposal(withoutSuggestion(proposal, id));
     void run(() => refresh({ ...draft, changes }, "Đã rà lại sau khi sửa."));
   }
