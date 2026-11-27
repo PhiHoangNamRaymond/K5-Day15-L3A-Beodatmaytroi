@@ -184,7 +184,17 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 
 ## Chạy website lịch tuần
 
-Trong thư mục này, chạy `python codebase/web_app.py` và mở http://127.0.0.1:8765. Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
+Web dùng React, TypeScript và Vite. Dùng Node.js 22.12 trở lên và Python 3.10 trở lên. Chạy từ thư mục `starter-repo`, sau đó mở http://127.0.0.1:8765.
+
+```powershell
+npm --prefix frontend ci
+npm --prefix frontend run build
+python codebase/web_app.py
+```
+
+Khi sửa giao diện, giữ server Python chạy trên cổng 8765, rồi chạy `npm --prefix frontend run dev` ở terminal khác và mở địa chỉ Vite in ra. Vite chuyển tiếp `/api` về Python. Mã UI ở `frontend/src`, kiểu dữ liệu và API lịch tuần ở `frontend/src/features/schedule`.
+
+Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
 
 1. Chọn **Tạo đề xuất lịch** để xem phòng, giảng viên và lab coach được gợi ý theo nguồn. Mở **Xem nguồn**, áp dụng đề xuất hoặc chọn từng giá trị. Mỗi lần sửa đều được kiểm lại.
 2. Trong **Cập nhật phòng**, chọn ca đổi H209 sang C403. Xem lớp bị ảnh hưởng, nguồn đối chiếu và nháp thông báo cho BTC. Áp dụng đề xuất, duyệt và tải bản bàn giao nếu đủ căn cứ.

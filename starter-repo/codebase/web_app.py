@@ -5,13 +5,13 @@ import mimetypes
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from agent import weekly_review
 from ai import MODEL_PROVIDER
 from tools import weeks
 
-ASSETS = {"/": "index.html", "/ui.js": "ui.js", "/style.css": "style.css"}
-WEB = Path(__file__).with_name("web")
+WEB = Path(__file__).resolve().parents[1] / "frontend" / "dist"
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -27,13 +27,20 @@ class Handler(BaseHTTPRequestHandler):
         self.send(code, json.dumps(obj, ensure_ascii=False).encode(), "application/json; charset=utf-8")
 
     def do_GET(self):
-        if self.path == "/api/weeks":
+        path = urlsplit(self.path).path
+        if path == "/api/weeks":
             self.send_json(200, {"weeks": sorted(weeks()), "mode": MODEL_PROVIDER})
-        elif self.path in ASSETS:
-            asset = WEB / ASSETS[self.path]
-            self.send(200, asset.read_bytes(), mimetypes.guess_type(asset)[0] + "; charset=utf-8")
-        else:
+            return
+        if path == "/" and not (WEB / "index.html").is_file():
+            self.send(503, b"Build the frontend first: npm --prefix starter-repo/frontend ci, then npm --prefix starter-repo/frontend run build.",
+                      "text/plain; charset=utf-8")
+            return
+        asset = (WEB / ("index.html" if path == "/" else path.removeprefix("/"))).resolve()
+        if not asset.is_relative_to(WEB) or not asset.is_file():
             self.send_error(404)
+            return
+        mime = mimetypes.guess_type(asset)[0] or "application/octet-stream"
+        self.send(200, asset.read_bytes(), mime)
 
     def do_POST(self):
         if self.path not in {"/api/review", "/api/propose", "/api/approve"}:
