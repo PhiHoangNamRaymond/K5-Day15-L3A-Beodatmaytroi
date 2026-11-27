@@ -1,5 +1,18 @@
 # Mini Hackathon AI — AI20K khoá 5 · L3
 
+
+## Dự án Bèo dạt mây trôi
+
+Code, dữ liệu demo và hồ sơ nhóm nằm trong [starter-repo](starter-repo/README.md). Frontend dùng React và TypeScript. Chạy các lệnh dưới đây từ thư mục gốc rồi mở http://127.0.0.1:8765.
+
+```powershell
+npm --prefix starter-repo/frontend ci
+npm --prefix starter-repo/frontend run build
+python starter-repo/codebase/web_app.py
+```
+
+[Xem wireframe và hai luồng trong Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=1-318).
+
 > **[README]** → [01-challenge-brief](01-challenge-brief.md) → [tracks/](tracks/README.md) → [02-guide](02-guide.md) → [03-rubric](03-rubric.md)
 
 **Tìm một chỗ đau thật của người dùng, thiết kế một giải pháp AI cho nó, rồi chứng minh bằng số.**

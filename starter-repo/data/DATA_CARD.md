@@ -39,3 +39,7 @@
 | Phiên bản / ngày lấy | Chốt ngày `27/11/2026` (trước mốc CP2). |
 | Nhãn | Kết hợp `data_that` (23 dòng từ bộ lịch giả lập BTC cấp) + `synthetic` / `tu_viet` (7 dòng viết tay theo kịch bản 4 lớp chỗ khó ở `spec.md` §5, không dùng LLM sinh ngẫu nhiên nên không có random seed; đã kiểm tay 7/7 dòng). |
 | Giới hạn | Chưa có câu `nguoi_dung` trích nguyên văn từ phỏng vấn người thật (sẽ bổ sung nếu có thêm log phỏng vấn trước CP3). |
+
+## Bản web local · fixture lịch tuần
+
+`data/weekly-demo.json` gồm 7 buổi trong 2 tuần và 3 cập nhật mẫu: đổi phòng đã xác nhận, thu hồi chưa có phòng thay thế và cập nhật thiếu bản lịch đã thông báo. Bảng phòng xác nhận, bản đã thông báo và đăng ký theo buổi được viết tay cho demo. Dữ liệu trong fixture là giả lập, không dùng làm bằng chứng pain. Đường dẫn online dùng miền mẫu. Demo tách dữ liệu này khỏi hai file XLSX và bộ benchmark CP2.

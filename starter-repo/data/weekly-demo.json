@@ -1,0 +1,23 @@
+﻿{
+  "2027-04-26": {
+    "rows": [
+      {"id":"GD-01","date":"2027-04-26","class_name":"L3A","topic":"Phân tích dữ liệu","start":"09:00","end":"11:00","room":"H209","room_options":["H209"],"teacher":"","teachers":["GV An","GV Chi"],"coach":"","coaches":["Coach Mai","Coach Hà"],"published_room":"H209"},
+      {"id":"GD-02","date":"2027-04-26","class_name":"L3B","topic":"Đánh giá hệ thống","start":"09:30","end":"11:30","room":"","room_options":["H210","C401"],"teacher":"","teachers":["GV An","GV Bình"],"coach":"","coaches":["Coach Mai","Coach Nam"],"published_room":"H210"},
+      {"id":"GD-03","date":"2027-04-28","class_name":"L2A","topic":"Làm việc với bảng tính","start":"14:00","end":"16:00","room":"","room_options":["C402"],"teacher":"","teachers":["GV Chi"],"coach":"","coaches":["Coach Hà"],"published_room":"C402"},
+      {"id":"GD-04","date":"2027-04-29","class_name":"L2B","topic":"Chuẩn bị dữ liệu","start":"14:00","end":"16:00","room":"","room_options":[],"teacher":"","teachers":["GV Dung"],"coach":"","coaches":["Coach Nam"],"online_source":"https://meet.example.org/ai20k-demo"},
+      {"id":"GD-05","date":"2027-04-30","class_name":"L3A","topic":"Thực hành đánh giá","start":"16:00","end":"18:00","room":"","room_options":["C401"],"teacher":"","teachers":["GV Chi"],"coach":"","coaches":["Coach Mai"],"published_room":"C401"}
+    ],
+    "updates": [
+      {"id":"UP-01","label":"Đã xác nhận đổi H209 sang C403","session":"GD-01","room":"C403","source":"BTC/MOCK-26-01"},
+      {"id":"UP-02","label":"Thu hồi C402, chưa có phòng thay thế","session":"GD-03","room":"","source":"BTC/MOCK-28-02"},
+      {"id":"UP-03","label":"Cập nhật phòng cho GD-04, thiếu lịch đã thông báo","session":"GD-04","room":"","source":"BTC/MOCK-29-03"}
+    ]
+  },
+  "2027-05-03": {
+    "rows": [
+      {"id":"GD-06","date":"2027-05-03","class_name":"L3A","topic":"Thực hành triển khai","start":"09:00","end":"11:00","room":"","room_options":["H209"],"teacher":"","teachers":["GV Bình"],"coach":"","coaches":["Coach Mai"]},
+      {"id":"GD-07","date":"2027-05-04","class_name":"L3B","topic":"Tổng kết","start":"14:00","end":"16:00","room":"","room_options":["H210"],"teacher":"","teachers":["GV An"],"coach":"","coaches":["Coach Hà"]}
+    ],
+    "updates": []
+  }
+}

@@ -10,7 +10,7 @@
 
 Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.
 
-Bối cảnh trên do nhóm mô tả, hiện **chưa có ghi chép phỏng vấn hoặc số liệu đo để xác nhận mức độ pain**. Nhóm cần xác nhận quy trình, vai trò key coach/BTC, quyền sửa và duyệt lịch với người trực tiếp phụ trách ngoài nhóm.
+Spec CP2 ghi 3 người ngoài nhóm xác nhận thiếu công cụ quản lý chung. Hồ sơ phỏng vấn và trích dẫn trong `evidence/` vẫn chưa được điền, nên kết quả này đang chờ đối chiếu với ghi chép gốc của nhóm.
 
 ## Lát cắt dự kiến
 
@@ -181,3 +181,35 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
 | 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · link video: chưa có, bổ sung trước CP4 |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
+
+## Chạy website lịch tuần
+
+Web dùng React, TypeScript và Vite. Dùng Node.js 22.12 trở lên và Python 3.10 trở lên. Chạy từ thư mục `starter-repo`, sau đó mở http://127.0.0.1:8765.
+
+```powershell
+npm --prefix frontend ci
+npm --prefix frontend run build
+python codebase/web_app.py
+```
+
+Khi sửa giao diện, giữ server Python chạy trên cổng 8765, rồi chạy `npm --prefix frontend run dev` ở terminal khác và mở địa chỉ Vite in ra. Vite chuyển tiếp `/api` về Python. Mã UI ở `frontend/src`, kiểu dữ liệu và API lịch tuần ở `frontend/src/features/schedule`.
+
+Chọn tuần 26/04/2027 để thử đầy đủ hai luồng hoặc tuần 03/05/2027 để thử lịch ít buổi.
+
+1. Trong **Lịch tuần**, chọn **Tạo đề xuất lịch** để xem phòng, giảng viên và lab coach được gợi ý theo nguồn. Mở **Xem nguồn**, áp dụng đề xuất hoặc chọn từng giá trị. Mỗi lần sửa đều được kiểm lại.
+2. Trong **Cập nhật phòng**, chọn ca đổi H209 sang C403. Xem lớp bị ảnh hưởng, nguồn đối chiếu và nháp thông báo cho BTC. Nếu đủ căn cứ, mở **Rà soát & bàn giao** để duyệt và tải bản bàn giao.
+3. Chọn ca thu hồi C402 để kiểm trạng thái chờ phòng mới. Có thể sao chép nháp thông báo tình trạng. Hồ sơ còn phòng chưa xác nhận sẽ bị chặn duyệt.
+4. Chọn cập nhật GD-04 thiếu lịch đã thông báo để kiểm trạng thái chưa xác định lớp cần báo lại. Khi muốn thử trùng ca, chọn GV An ở cả GD-01 và GD-02 rồi mở hai liên kết trong cảnh báo để đối chiếu nguồn.
+
+Có thể áp dụng hoặc bỏ qua đề xuất theo từng buổi. Web giữ các chỉnh sửa nhân sự khi chuyển kịch bản đổi phòng và kiểm lại bản nháp trước khi cho duyệt.
+
+Website đọc hai tuần giả lập trong `data/weekly-demo.json`. Bản bàn giao được tải thành tệp văn bản. Phiên local dùng dữ liệu mẫu và chưa ghi lịch lên hệ thống của nhóm. Nếu cấu hình `.env` với `MODEL_PROVIDER=openai`, model có thể chọn giữa các phương án hợp lệ. Ngoại tuyến, code chọn phương án theo quy tắc và giao diện ghi rõ chế độ. Bộ benchmark CP2 hiện mô tả nhiều ca điều phối trong dữ liệu BTC. Website này mới được kiểm với hai tuần giả lập bên trên.
+
+## Bàn giao và điểm cần đối chiếu
+
+- [WORKLOAD.md](../WORKLOAD.md) ghi phần FE đã hoàn thành, cách demo và các hợp đồng cần giữ khi tích hợp.
+- [Bố cục ba tab trên Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=15-2) là bản giao diện hiện tại.
+- [Wireframe Figma](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=1-318) mô tả luồng lập lịch tuần và nhánh xử lý khi phòng đổi hoặc bị thu hồi.
+- [Trạng thái bổ sung CP2](https://www.figma.com/design/qoG5PzrsWyG59PHbFZ8zCm?node-id=7-3) minh họa đề xuất theo từng buổi, lỗi trùng ca và ca thiếu bản lịch đã thông báo.
+- Spec CP2 và `eval/metric_spec.yaml` đang lệch ngưỡng ở `hoi_lai_khi_thieu`, `ban_nhap_thong_bao_va_checklist_dong_bo` và `dung_y_yeu_cau`. Spec trên `main` ghi 80%, file metric ghi 90%. Đối chiếu bản nhóm đã nộp CP2 trước khi chấm hoặc báo điểm.
+- Nhánh demo đã có workflow chạy trên fixture hai tuần. Chưa có kết quả lượt chính thức cho bộ 30 câu CP2 và chưa kiểm model qua API thật.
