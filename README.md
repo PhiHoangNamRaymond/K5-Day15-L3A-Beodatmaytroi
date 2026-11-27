@@ -1,52 +1,69 @@
-# Bèo dạt mây trôi — Rà soát lịch phân công giảng dạy
+# Bèo dạt mây trôi — Hỗ trợ lập và cập nhật lịch giảng dạy theo tuần
 
 - **Lớp:** L3A
 - **Track:** A — EdTech, hướng A5 — Vận hành đào tạo
-- **Người dùng chính:** key coach rà soát và duyệt lịch giảng dạy cho ngày hôm sau (vai trò cần xác nhận với người trực tiếp phụ trách).
+- **Người dùng chính:** key coach phụ trách chuẩn bị, rà soát và duyệt bản lịch tuần trước khi chuyển BTC thông báo; vai trò và quyền duyệt thực tế cần xác nhận với người phụ trách.
 - **Thành viên và phân công:** [TEAMS.md](TEAMS.md).
 - **Canvas:** [canvas.md](canvas.md).
 
 ## Bài toán
 
-Tối trước ngày học, key coach phải đối chiếu thủ công lịch giảng dạy, đăng ký nhân sự và thông tin phòng để tìm và sửa sai lệch, khiến việc hoàn thiện lịch mất thời gian và có nguy cơ bỏ sót lỗi.
+Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.
 
-Đây là **giả thuyết cần kiểm chứng**. Nhóm sẽ xác nhận vai trò, quy trình và thời gian thực hiện với người phụ trách ngoài nhóm; hiện chưa có số liệu hay kết quả phỏng vấn để kết luận.
+Bối cảnh trên do nhóm mô tả, hiện **chưa có ghi chép phỏng vấn hoặc số liệu đo để xác nhận mức độ pain**. Nhóm cần xác nhận quy trình, vai trò key coach/BTC, quyền sửa và duyệt lịch với người trực tiếp phụ trách ngoài nhóm.
 
 ## Lát cắt dự kiến
 
-Một key coach rà soát lịch giảng dạy cho ngày hôm sau, AI đối chiếu lịch với đăng ký nhân sự và thông tin phòng để quyết định cảnh báo và đề xuất chỉnh sửa khi có sai lệch hoặc thiếu dữ liệu, giúp key coach hoàn thiện và duyệt lịch nhanh hơn so với kiểm tra thủ công.
+Một key coach chuẩn bị lịch giảng dạy cho tuần sau, AI đề xuất bản nháp lịch từ đăng ký nhân sự và thông tin phòng được cung cấp, đồng thời chỉ ra dữ liệu thiếu hoặc mâu thuẫn và đề xuất chỉnh sửa khi phòng thay đổi, giúp key coach hoàn thiện và duyệt lịch nhanh hơn so với làm thủ công.
 
 ## Phạm vi website
 
-Website chỉ dành cho key coach. Luồng dự kiến: chọn ngày → xem bảng phân công → yêu cầu agent rà soát → xem vấn đề và nguồn đối chiếu → sửa hoặc chấp nhận đề xuất → duyệt lịch.
+Website dành cho key coach, hỗ trợ lập và cập nhật lịch giảng dạy cho một tuần được chọn.
 
-Agent chỉ cảnh báo và đề xuất, không tự chốt phòng, đổi phân công hay gửi thông báo. Key coach quyết định thay đổi và duyệt lịch cuối cùng. Kiểm tra ràng buộc rõ ràng như trùng người, trùng phòng thực hiện bằng code; AI hỗ trợ diễn giải dữ liệu chữ tự do và đề xuất xử lý.
+Luồng dự kiến: chọn tuần → xem đăng ký nhân sự và tình trạng phòng → yêu cầu tạo bản nháp lịch → xem cảnh báo và nguồn đối chiếu → key coach sửa hoặc chấp nhận đề xuất → duyệt bản lịch để BTC thông báo.
+
+Khi có cập nhật phòng sau lần thông báo trước: người dùng cung cấp thông tin xác nhận mới → hệ thống đối chiếu với bản lịch đã thông báo → chỉ ra buổi học, lớp và địa điểm bị ảnh hưởng → đề xuất cập nhật lịch và tạo bản nháp thông báo thay đổi → key coach kiểm tra và duyệt.
+
+- AI đề xuất bản nháp lịch trên các buổi học, đăng ký nhân sự và thông tin phòng đã có; phần chưa đủ căn cứ phải được đánh dấu để xác nhận.
+- Code kiểm tra ràng buộc rõ ràng như trùng người, trùng phòng và thời gian; AI hỗ trợ diễn giải nội dung chữ tự do, giải thích vấn đề và đề xuất xử lý.
+- Key coach sửa và duyệt trên website; thay đổi không tự ghi vào bảng lịch chính thức hoặc tự gửi thông báo.
+- Bản thử chưa tự tìm phòng trống, đặt phòng, xin nhà trường duyệt hoặc tối ưu lịch toàn khóa.
 
 Các tình huống cần mô phỏng:
 
-- Phòng chưa được xác nhận.
-- Hai bảng ghi hai phòng khác nhau.
-- Phòng thay đổi sau khi đã thông báo.
-- Buổi học chuyển sang online.
-- Tên người được nhập lệch danh sách chuẩn.
+| Tình huống | Hành vi mong muốn |
+|---|---|
+| Phòng chưa được xác nhận | Đánh dấu chờ xác nhận; không trình bày phòng dự kiến như địa điểm đã chốt |
+| Hai nguồn ghi hai phòng khác nhau | Hiển thị nguồn mâu thuẫn và yêu cầu xác minh trước khi duyệt phần bị ảnh hưởng |
+| Phòng bị thu hồi, chưa có phòng mới | Chỉ ra buổi/lớp bị ảnh hưởng; báo chưa có địa điểm thay thế được xác nhận |
+| Phòng đổi sau khi đã thông báo | So sánh phòng cũ và mới, nêu rõ tòa nhà nếu nguồn có; tạo nháp thông báo cập nhật |
+| Buổi học chuyển sang online | Cảnh báo thông tin phòng trực tiếp còn sót và kiểm tra thông tin học online được cung cấp |
+| Tên người gõ lệch danh sách chuẩn | Đề xuất tên có thể khớp; trường hợp mơ hồ cần người dùng xác nhận |
+| Nhân sự hoặc phòng bị trùng giờ | Code phát hiện xung đột; mọi chỉnh sửa phải được kiểm tra lại trước khi duyệt |
 
 ## Dữ liệu và bằng chứng
 
-Nguồn chạy thử là bộ dữ liệu **giả lập** `teaching-schedule.xlsx` do BTC cung cấp, xem [mô tả dữ liệu](data/training-ops/README.md). Các sheet dự kiến sử dụng: `Khoá 9 (GĐ1)`, `Dang_ky_chi_tiet`, `Nhan_su` và `Lịch sử chỉnh sửa`. Không cần tích hợp nguồn dữ liệu trực tiếp để làm bản thử.
+Nguồn chạy thử là bộ dữ liệu **giả lập** `teaching-schedule.xlsx` do BTC cung cấp, xem [mô tả dữ liệu](data/training-ops/README.md). Các sheet dự kiến sử dụng: `Khoá 9 (GĐ1)`, `Dang_ky_chi_tiet`, `Nhan_su` và `Lịch sử chỉnh sửa`. Chỉ đề xuất nhân sự và phòng khi dữ liệu cung cấp đủ căn cứ; việc đăng ký một buổi không có nghĩa người đó rảnh ở mọi buổi khác.
 
-Dữ liệu mock dùng để dựng tình huống và kiểm thử, **không phải bằng chứng pain**. Không đưa nhãn rà soát có sẵn ở sheet `Canh_bao` vào đầu vào nếu dùng chúng làm đáp án đánh giá khả năng phát hiện vấn đề. Không đăng lại nguyên bộ dữ liệu BTC trong repo nộp bài; vị trí dữ liệu làm việc và cách xử lý sẽ ghi trong [data/DATA_CARD.md](data/DATA_CARD.md).
+Bản thử không tích hợp dữ liệu trực tiếp từ nhà trường. Cập nhật phòng được người dùng cung cấp hoặc mô phỏng có nhãn; hệ thống không tự phát hiện việc phòng vật lý bị thu hồi. Lịch sử sửa bảng không chứng minh một thông báo đã được gửi: bản lịch đã thông báo và trạng thái thông báo phải được ghi nhận riêng trong tình huống mock.
+
+Dữ liệu mock dùng để dựng tình huống và kiểm thử, **không phải bằng chứng pain**. Không đưa nhãn rà soát có sẵn ở sheet `Canh_bao` vào đầu vào nếu dùng chúng làm đáp án đánh giá khả năng phát hiện vấn đề. Không đăng lại nguyên bộ dữ liệu BTC trong repo nộp bài; phiên bản, phần trích dùng và cách xử lý cần được ghi tại [data/DATA_CARD.md](data/DATA_CARD.md).
 
 ## Đánh giá dự kiến
 
-Chỉ số chính là thời gian từ lúc mở bộ lịch đến khi sửa xong và duyệt, bao gồm thời gian chờ agent và kiểm tra đề xuất.
+Chỉ số chính là thời gian từ lúc mở bộ dữ liệu của tuần đến khi hoàn thiện và duyệt bản lịch, bao gồm thời gian chờ AI, kiểm tra căn cứ và sửa đề xuất. Với tình huống đổi phòng sau thông báo, đo thêm thời gian từ khi nhận cập nhật đến khi duyệt xong bản lịch và nháp thông báo thay đổi.
 
-**Tỷ lệ giảm thời gian (%) = (thời gian thủ công − thời gian có agent) / thời gian thủ công × 100%.**
+**Tỷ lệ giảm thời gian (%) = (thời gian thủ công − thời gian có AI) / thời gian thủ công × 100%.**
 
-So sánh trên các bộ tình huống có độ khó tương đương, đồng thời kiểm tra lỗi còn sót trong lịch đã duyệt. Ngưỡng đạt cụ thể sẽ chốt ở CP2 trong `spec.md` §7 và `eval/metric_spec.yaml`. Hiện chưa có kết quả đo.
+So sánh trên các bộ tình huống có độ khó tương đương và đổi thứ tự thử để giảm ảnh hưởng do nhớ đáp án. Chỉ tính hoàn thành khi lịch đáp ứng điều kiện đúng đã định nghĩa; đồng thời đo lỗi còn sót, cảnh báo sai, lớp bị bỏ sót và việc dùng phòng chưa xác nhận như phòng đã chốt. Không gộp hai tác vụ lập lịch tuần và cập nhật phòng thành một số thời gian nếu chưa định nghĩa cách tổng hợp.
+
+Ngưỡng đạt cần thống nhất trong `spec.md` §7 và `eval/metric_spec.yaml` trước khi khóa CP2; README này không tự thay đổi các ngưỡng đã chốt. Hiện chưa có kết quả đo.
 
 ## Trạng thái tại CP1
 
-Đã chốt hướng A5 teaching và phạm vi dự kiến. Website, agent, bằng chứng pain và kết quả đánh giá chưa được xác minh hoàn thành. Phần hướng dẫn bên dưới mô tả bộ khung starter và các mốc phát triển tiếp theo, không phải xác nhận sản phẩm đã chạy thật.
+Bản CP1 tập trung rà soát lịch giảng dạy cho ngày hôm sau. Định hướng đang cập nhật cho CP2 là đề xuất bản nháp lịch tuần và hỗ trợ cập nhật khi phòng thay đổi; cần đồng bộ canvas, kiến trúc, công cụ, benchmark và metric trước khi nộp.
+
+Website, agent, bằng chứng pain và kết quả đánh giá chưa được xác minh hoàn thành. Các mục chức năng phía trên là thiết kế dự kiến; hướng dẫn bên dưới mô tả bộ khung starter và cách phát triển tiếp.
 
 ---
 
@@ -60,7 +77,7 @@ So sánh trên các bộ tình huống có độ khó tương đương, đồng 
 | Chấm cột `pass` theo metric spec | Chạy cả bộ một lệnh, có run ID, model, token từng câu (`run.py eval`) · tính % đạt (`run.py score`) |
 | Persona, số người dùng thật, giá model (`cost/personas.yaml`) | Sinh ~50 phiên, chạy thật qua bản chạy thử, tính chi phí / phiên, / task thành công, / tháng 3 kịch bản (`run.py simulate`) |
 
-*Áp dụng cho nhóm:* công cụ đọc lịch và đăng ký nhân sự trả về vị trí nguồn; agent chỉ ra sai lệch hoặc thông tin thiếu và đề xuất cách xử lý để key coach duyệt. Bộ khung hỗ trợ ghi trace, chạy đánh giá và mô phỏng chi phí sau khi nhóm triển khai luồng này.
+*Áp dụng cho nhóm:* công cụ đọc lịch tuần, đăng ký nhân sự, trạng thái phòng và lịch sử thay đổi phải trả về nguồn đối chiếu. Code kiểm tra ràng buộc; AI đề xuất bản nháp lịch và cách xử lý các vấn đề để key coach duyệt. Bộ khung hỗ trợ ghi trace, đánh giá và mô phỏng chi phí sau khi luồng được triển khai.
 
 ## Chạy trong 3 phút
 
@@ -130,7 +147,7 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 ## Dùng AI vào việc gì
 
-Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và biên soạn README theo hướng A5 teaching. Nhóm chịu trách nhiệm kiểm tra nội dung, xác nhận giả thuyết pain và đối chiếu với phạm vi thực tế trước khi nộp. Chi tiết quá trình dùng AI sẽ được bổ sung tại [docs/ai-usage.md](docs/ai-usage.md); hướng dẫn coding agent ở [AGENTS.md](AGENTS.md).
+Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và biên soạn README theo hướng A5 teaching, gồm cập nhật phạm vi lịch tuần và xử lý thay đổi phòng. Nhóm chịu trách nhiệm kiểm tra nội dung, xác nhận giả thuyết pain và đối chiếu với phạm vi thực tế trước khi nộp. Chi tiết quá trình dùng AI sẽ được bổ sung tại [docs/ai-usage.md](docs/ai-usage.md); hướng dẫn coding agent ở [AGENTS.md](AGENTS.md).
 
 ## File mẫu — điền ở bước nào
 
