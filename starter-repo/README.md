@@ -1,35 +1,69 @@
-> Đây là khung repo nộp bài. Điền mọi chỗ `____`, giữ nguyên tên các mục. **Mục 0 xoá đi sau khi tạo repo xong.**
-> Giờ, mốc, luật, rubric: xem `README.md`, `02-guide.md`, `03-rubric.md` trong repo đề (bộ đề BTC phát).
+# Bèo dạt mây trôi — Hỗ trợ lập và cập nhật lịch giảng dạy theo tuần
 
-# [Tên nhóm] — [Tên lát cắt]
+- **Lớp:** L3A
+- **Track:** A — EdTech, hướng A5 — Vận hành đào tạo
+- **Người dùng chính:** key coach phụ trách chuẩn bị, rà soát và duyệt bản lịch tuần trước khi chuyển BTC thông báo; vai trò và quyền duyệt thực tế cần xác nhận với người phụ trách.
+- **Thành viên và phân công:** [TEAMS.md](TEAMS.md).
+- **Canvas:** [canvas.md](canvas.md).
 
-**Thành viên, lớp, track:** xem [TEAMS.md](TEAMS.md). **Điền TEAMS.md đúng format**: khi chấm và đánh giá, BTC quét file này để ghép điểm cho từng người.
+## Bài toán
 
-*Lát cắt = phần nhỏ nhất làm xong được trong hackathon: một người dùng · một việc · một quyết định AI · một kết quả.*
+Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.
 
----
+Bối cảnh trên do nhóm mô tả, hiện **chưa có ghi chép phỏng vấn hoặc số liệu đo để xác nhận mức độ pain**. Nhóm cần xác nhận quy trình, vai trò key coach/BTC, quyền sửa và duyệt lịch với người trực tiếp phụ trách ngoài nhóm.
 
-## 0. Tạo repo nhóm từ khung này *(guide bước 1.0 — xoá mục này khi xong)*
+## Lát cắt dự kiến
 
-**Hai luật:** repo **mới, công khai (Public)** · tên `K5-Day15-<lớp>-<tên nhóm>`, vd `K5-Day15-L3A-StudyPulse` (tên nhóm viết liền, không dấu). Chép **nội dung bên trong** `starter-repo/` — `README.md`, `run.py` phải nằm ngay ở trang đầu repo.
+Một key coach chuẩn bị lịch giảng dạy cho tuần sau, AI đề xuất bản nháp lịch từ đăng ký nhân sự và thông tin phòng được cung cấp, đồng thời chỉ ra dữ liệu thiếu hoặc mâu thuẫn và đề xuất chỉnh sửa khi phòng thay đổi, giúp key coach hoàn thiện và duyệt lịch nhanh hơn so với làm thủ công.
 
-**(a) Không cần terminal — làm trên web GitHub**
-1. **New repository** → tên theo mẫu → **Public** → không tick thêm gì → tạo.
-2. Trên máy mở thư mục `starter-repo/`, **bật hiện file ẩn** (Mac Finder: `Cmd + Shift + .` · Windows: View → Show → Hidden items) để thấy `.gitignore`, `.env.example`.
-3. Trên repo vừa tạo: **Add file → Upload files** → **kéo thả** tất cả file và thư mục bên trong `starter-repo/` → **Commit changes**. Kéo thả mới giữ được thư mục con; lỗi vì nhiều file quá thì tải từng thư mục.
-4. Kiểm: có `.gitignore` chưa (hay thiếu nhất). Thiếu thì **Add file → Create new file**, tên `.gitignore`, dán nội dung từ máy.
-5. Từ giờ sửa file ngay trên web (biểu tượng bút chì → Commit). Phần code vẫn cần **một** người chạy được trên máy: trước mỗi lượt chạy tải **Code → Download ZIP** về thư mục mới (mang `.env` sang), chạy xong chỉ upload file kết quả và file vừa sửa; trong lúc đang chạy không ai sửa `eval/benchmark.csv` trên web.
+## Phạm vi website
 
-**(b) Dùng git**
-```bash
-git clone https://github.com/<tai-khoan>/K5-Day15-L3A-TenNhom.git
-cd K5-Day15-L3A-TenNhom
-cp -R ../duong-dan-toi/starter-repo/. .      # Windows PowerShell: Copy-Item -Recurse -Force ..\duong-dan-toi\starter-repo\* .
-git status                                   # không được có .env, data-btc/
-git add -A && git commit -m "Khung repo từ starter-repo" && git push
-```
+Website dành cho key coach, hỗ trợ lập và cập nhật lịch giảng dạy cho một tuần được chọn.
 
-**Xong khi:** mở link repo bằng **cửa sổ ẩn danh** thấy được file (link nộp CP1) · đã mời thành viên (Settings → Collaborators) · đã điền `TEAMS.md` và `python run.py check` không báo gì ở phần "Kiểm TEAMS.md".
+Luồng dự kiến: chọn tuần → xem đăng ký nhân sự và tình trạng phòng → yêu cầu tạo bản nháp lịch → xem cảnh báo và nguồn đối chiếu → key coach sửa hoặc chấp nhận đề xuất → duyệt bản lịch để BTC thông báo.
+
+Khi có cập nhật phòng sau lần thông báo trước: người dùng cung cấp thông tin xác nhận mới → hệ thống đối chiếu với bản lịch đã thông báo → chỉ ra buổi học, lớp và địa điểm bị ảnh hưởng → đề xuất cập nhật lịch và tạo bản nháp thông báo thay đổi → key coach kiểm tra và duyệt.
+
+- AI đề xuất bản nháp lịch trên các buổi học, đăng ký nhân sự và thông tin phòng đã có; phần chưa đủ căn cứ phải được đánh dấu để xác nhận.
+- Code kiểm tra ràng buộc rõ ràng như trùng người, trùng phòng và thời gian; AI hỗ trợ diễn giải nội dung chữ tự do, giải thích vấn đề và đề xuất xử lý.
+- Key coach sửa và duyệt trên website; thay đổi không tự ghi vào bảng lịch chính thức hoặc tự gửi thông báo.
+- Bản thử chưa tự tìm phòng trống, đặt phòng, xin nhà trường duyệt hoặc tối ưu lịch toàn khóa.
+
+Các tình huống cần mô phỏng:
+
+| Tình huống | Hành vi mong muốn |
+|---|---|
+| Phòng chưa được xác nhận | Đánh dấu chờ xác nhận; không trình bày phòng dự kiến như địa điểm đã chốt |
+| Hai nguồn ghi hai phòng khác nhau | Hiển thị nguồn mâu thuẫn và yêu cầu xác minh trước khi duyệt phần bị ảnh hưởng |
+| Phòng bị thu hồi, chưa có phòng mới | Chỉ ra buổi/lớp bị ảnh hưởng; báo chưa có địa điểm thay thế được xác nhận |
+| Phòng đổi sau khi đã thông báo | So sánh phòng cũ và mới, nêu rõ tòa nhà nếu nguồn có; tạo nháp thông báo cập nhật |
+| Buổi học chuyển sang online | Cảnh báo thông tin phòng trực tiếp còn sót và kiểm tra thông tin học online được cung cấp |
+| Tên người gõ lệch danh sách chuẩn | Đề xuất tên có thể khớp; trường hợp mơ hồ cần người dùng xác nhận |
+| Nhân sự hoặc phòng bị trùng giờ | Code phát hiện xung đột; mọi chỉnh sửa phải được kiểm tra lại trước khi duyệt |
+
+## Dữ liệu và bằng chứng
+
+Nguồn chạy thử là bộ dữ liệu **giả lập** `teaching-schedule.xlsx` do BTC cung cấp, xem [mô tả dữ liệu](data/training-ops/README.md). Các sheet dự kiến sử dụng: `Khoá 9 (GĐ1)`, `Dang_ky_chi_tiet`, `Nhan_su` và `Lịch sử chỉnh sửa`. Chỉ đề xuất nhân sự và phòng khi dữ liệu cung cấp đủ căn cứ; việc đăng ký một buổi không có nghĩa người đó rảnh ở mọi buổi khác.
+
+Bản thử không tích hợp dữ liệu trực tiếp từ nhà trường. Cập nhật phòng được người dùng cung cấp hoặc mô phỏng có nhãn; hệ thống không tự phát hiện việc phòng vật lý bị thu hồi. Lịch sử sửa bảng không chứng minh một thông báo đã được gửi: bản lịch đã thông báo và trạng thái thông báo phải được ghi nhận riêng trong tình huống mock.
+
+Dữ liệu mock dùng để dựng tình huống và kiểm thử, **không phải bằng chứng pain**. Không đưa nhãn rà soát có sẵn ở sheet `Canh_bao` vào đầu vào nếu dùng chúng làm đáp án đánh giá khả năng phát hiện vấn đề. Không đăng lại nguyên bộ dữ liệu BTC trong repo nộp bài; phiên bản, phần trích dùng và cách xử lý cần được ghi tại [data/DATA_CARD.md](data/DATA_CARD.md).
+
+## Đánh giá dự kiến
+
+Chỉ số chính là thời gian từ lúc mở bộ dữ liệu của tuần đến khi hoàn thiện và duyệt bản lịch, bao gồm thời gian chờ AI, kiểm tra căn cứ và sửa đề xuất. Với tình huống đổi phòng sau thông báo, đo thêm thời gian từ khi nhận cập nhật đến khi duyệt xong bản lịch và nháp thông báo thay đổi.
+
+**Tỷ lệ giảm thời gian (%) = (thời gian thủ công − thời gian có AI) / thời gian thủ công × 100%.**
+
+So sánh trên các bộ tình huống có độ khó tương đương và đổi thứ tự thử để giảm ảnh hưởng do nhớ đáp án. Chỉ tính hoàn thành khi lịch đáp ứng điều kiện đúng đã định nghĩa; đồng thời đo lỗi còn sót, cảnh báo sai, lớp bị bỏ sót và việc dùng phòng chưa xác nhận như phòng đã chốt. Không gộp hai tác vụ lập lịch tuần và cập nhật phòng thành một số thời gian nếu chưa định nghĩa cách tổng hợp.
+
+Ngưỡng đạt cần thống nhất trong `spec.md` §7 và `eval/metric_spec.yaml` trước khi khóa CP2; README này không tự thay đổi các ngưỡng đã chốt. Hiện chưa có kết quả đo.
+
+## Trạng thái tại CP1
+
+Bản CP1 tập trung rà soát lịch giảng dạy cho ngày hôm sau. Định hướng đang cập nhật cho CP2 là đề xuất bản nháp lịch tuần và hỗ trợ cập nhật khi phòng thay đổi; cần đồng bộ canvas, kiến trúc, công cụ, benchmark và metric trước khi nộp.
+
+Website, agent, bằng chứng pain và kết quả đánh giá chưa được xác minh hoàn thành. Các mục chức năng phía trên là thiết kế dự kiến; hướng dẫn bên dưới mô tả bộ khung starter và cách phát triển tiếp.
 
 ---
 
@@ -43,7 +77,7 @@ git add -A && git commit -m "Khung repo từ starter-repo" && git push
 | Chấm cột `pass` theo metric spec | Chạy cả bộ một lệnh, có run ID, model, token từng câu (`run.py eval`) · tính % đạt (`run.py score`) |
 | Persona, số người dùng thật, giá model (`cost/personas.yaml`) | Sinh ~50 phiên, chạy thật qua bản chạy thử, tính chi phí / phiên, / task thành công, / tháng 3 kịch bản (`run.py simulate`) |
 
-*Ví dụ track A (ví dụ cỡ, không phải lời giải):* nhóm viết công cụ `search_lesson` tra bài pre-class đã đánh mã đoạn, luồng "tra đoạn → model trả lời kèm mã đoạn, không có thì nói không có", metric "mọi khẳng định có mã đoạn đúng", persona "ôn dồn trước kiểm tra". Khung chạy 25 câu thử ra `run-1.csv`, nhóm chấm `pass`, `score` in % đạt; `simulate` chạy 50 phiên ra chi phí / task thành công cho hai model.
+*Áp dụng cho nhóm:* công cụ đọc lịch tuần, đăng ký nhân sự, trạng thái phòng và lịch sử thay đổi phải trả về nguồn đối chiếu. Code kiểm tra ràng buộc; AI đề xuất bản nháp lịch và cách xử lý các vấn đề để key coach duyệt. Bộ khung hỗ trợ ghi trace, đánh giá và mô phỏng chi phí sau khi luồng được triển khai.
 
 ## Chạy trong 3 phút
 
@@ -108,14 +142,12 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | **Thật** (bắt buộc từ CP3) | Model: ____ |
-|  |  |  |
+| Lời gọi AI ở quyết định trung tâm | Chưa xác minh nối model thật; bắt buộc thật từ CP3 | Model chưa chốt |
+| Dữ liệu lịch, phòng và nhân sự | Giả lập | teaching-schedule.xlsx do BTC cung cấp |
 
 ## Dùng AI vào việc gì
 
-2–3 dòng (bắt buộc): nhóm dùng công cụ AI nào để làm gì, người kiểm lại phần nào. Chi tiết: [docs/ai-usage.md](docs/ai-usage.md). Coding agent đọc [AGENTS.md](AGENTS.md).
-
-____
+Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và biên soạn README theo hướng A5 teaching, gồm cập nhật phạm vi lịch tuần và xử lý thay đổi phòng. Nhóm chịu trách nhiệm kiểm tra nội dung, xác nhận giả thuyết pain và đối chiếu với phạm vi thực tế trước khi nộp. Chi tiết quá trình dùng AI sẽ được bổ sung tại [docs/ai-usage.md](docs/ai-usage.md); hướng dẫn coding agent ở [AGENTS.md](AGENTS.md).
 
 ## File mẫu — điền ở bước nào
 
@@ -147,5 +179,5 @@ ____
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · link video: ____ |
+| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · link video: chưa có, bổ sung trước CP4 |
 | + | *Bonus:* người dùng thử | `validation/log.md` |

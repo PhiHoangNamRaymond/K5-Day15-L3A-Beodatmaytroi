@@ -1,3 +1,4 @@
+@ -1,25 +0,0 @@
 # TEAMS
 
 > **Khi chấm và đánh giá, BTC dùng máy quét file này để ghép điểm cho từng người. Phải điền đúng format.**
@@ -12,9 +13,9 @@
 | STT | Họ và tên | Mã học viên | Vai trò | Phần việc chính |
 |---|---|---|---|---|
 | 1 | Phí Hoàng Nam | 2A202603435 | Đội trưởng | Hoàn thành tài liệu hỗ trợ UI/UX FE và BE |
-| 2 | Trần Thanh Long | 2A202603674 | Thành viên | Data Engineer |
-| 3 | Phan Hải Đăng | 2A202603409 | Thành viên | Product owner + Deploy |
-| 4 | Nguyễn Vũ Hoàng | 2A202603491 | Thành viên | Fullstack |
+| 2 | Trần Thanh Long | 2A202603674 | Thành viên | Ai Engineer |
+| 3 | Phan Hải Đăng | 2A202603409 | Thành viên | Deploy + BE |
+| 4 | Nguyễn Vũ Hoàng | 2A202603491 | Thành viên | FE |
 
 **Quy tắc điền**
 - **Lớp:** `L3A` hoặc `L3B`. **Track:** một chữ `A` (EdTech), `B` (Y tế), `C` (Du lịch), `D` (Thương mại điện tử), `E` (Tài chính) hoặc `F` (Làn khác). **Link repo:** link GitHub công khai của nhóm.
