@@ -4,7 +4,7 @@
 > Một trang. Mỗi dataset một mục. Dữ liệu chạy thử (bài mẫu, thông báo mẫu, đoạn transcript…) để trong thư mục `data/` này.
 > Không commit nguyên tài liệu khoá, dữ liệu cá nhân thật hay nguyên file data BTC cấp — chỉ đoạn trích ngắn, bản viết lại, hoặc số đã tổng hợp.
 
-## Dataset 1 · [tên]
+## Dataset 1 · Bảng phân công giảng dạy (`teaching-schedule.xlsx`)
 
 | | |
 |---|---|
