@@ -23,7 +23,7 @@
   4. **Thông báo phân tán:** đổi lịch được báo trên nhiều kênh (Discord, Zalo, Outlook…), dễ sót người hoặc báo lệch nhau.
 
   Hậu quả: thời gian xếp lại và thông báo dồn sát giờ, dễ thiếu coach theo phòng, sót nhân sự hoặc đến nhầm phòng.
-* **Trạng thái bằng chứng (chi tiết: `evidence/summary.md`):** Bản CP2 ghi nhận phỏng vấn 3 người, nhưng repo chưa có ghi chép gốc để xác minh vai trò, câu trả lời và trích dẫn. Chưa xác nhận đạt ngưỡng bằng chứng pain. Workbook giả lập không thay thế bằng chứng người dùng thật.
+* **Bằng chứng (chi tiết: `evidence/summary.md`, `evidence/survey/results.csv`):** Khảo sát Google Form, n = 3 (key coach / lab coach). 2/2 người có vai key coach lập lịch bằng AI (Claude, AI nhập từ Google Sheet); 3/3 không có công cụ quản lý phòng vật lý chung; 3/3 nhận thông báo thay đổi qua ≥2 kênh (Zalo, Gmail, Outlook, Discord…). Trích: *"phòng đột nhiên bị thu hồi, phải tách ra các phòng nhỏ hơn, phải tìm và sắp xếp thêm người rất là khó khăn"* (R2). **Chưa đạt ngưỡng R1:** khảo sát cần ≥20 phiếu và chưa có ghi chép phỏng vấn riêng từng người. Workbook giả lập không tính là bằng chứng.
 
 ## §2. Impact và quyết định chọn *(guide 1.3)*
 
@@ -33,7 +33,7 @@
 | Lập lịch tuần và xử lý phòng đổi | 1 key coach | 4 lần lập, 2 lần cập nhật | 25 phút/lần lập, 10 phút/lần cập nhật | 120 phút | **Chọn.** Bao phủ cả hai luồng vận hành chính; có thể dựng và kiểm thử bằng dữ liệu giả lập cùng một bản lịch đã thông báo. |
 | Tối ưu lịch toàn khóa | 1 key coach | 1 lần | 45 phút | 45 phút | Loại. Phạm vi vượt quá chu kỳ một tuần và đòi hỏi dữ liệu khả dụng của nhân sự, phòng học qua nhiều tuần. |
 
-* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**. Các số tần suất và thời gian trong bảng hiện là **tự ước tính**, chưa có ghi chép đo hoặc phỏng vấn để kiểm chứng.
+* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**. Các số tần suất và thời gian trong bảng hiện là **tự ước tính**. Khảo sát (n = 3) chỉ xác nhận chu kỳ: lịch phân công "thường sẽ là theo tuần" (R2), còn coach nhận lịch "theo ngày" (R1, R3). Chưa có số phút đo được.
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
 
@@ -162,26 +162,33 @@ Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py]
     Báo cáo riêng **2 kết quả** cho 2 tác vụ; hiện có **0 ngưỡng thời gian được chốt**.
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
-- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
-- Chi phí / task thành công: __ (model __) · __ (model __)
-- Chi phí / tháng ở quy mô thật: thấp __ · cơ sở __ · cao __ → chi tiết `cost/cost-estimate.md`
-- So với impact / người / tháng (§2): đáng làm không, vì sao: 
+- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-1.csv` (50 phiên, seed 42, 9 phiên lỗi JSON)
+- Chi phí / task thành công (tỉ lệ đạt 57%, lượt 2): **$0,126** (deepseek-flash) · $0,042 (gpt-6-luna) · $0,549 (deepseek-v4-pro)
+- Chi phí / tháng ở quy mô thật (deepseek-flash): thấp $4,84 (5 key coach) · cơ sở $9,67 (10) · cao $19,35 (20) → chi tiết `cost/cost-estimate.md`
+- So với impact / người / tháng (§2, 120 phút): chi phí khoảng $0,97 ≈ 25.000 ₫ mỗi key coach mỗi tháng. **Đáng làm**: chỉ cần tiết kiệm khoảng 15 phút/tháng là hòa vốn (giờ công tự ước tính). Rủi ro chính là độ đúng 57% và 18% phiên lỗi JSON, không phải tiền model.
 
 ## §9. Rủi ro & an toàn
-- Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
-- AI **không được** làm gì kể cả khi người dùng yêu cầu: Không tự ý confirm xếp phòng và thông báo. Vẫn phải qua người duyệt review.
-- Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào: 
+- **Dữ liệu:** chỉ dùng workbook giả lập BTC. Không gửi cột email sang model. Phiếu khảo sát xuất ra đã bỏ tên người được nhắc tới, form không thu tên/email. Workbook gốc và `.env` không commit. API key chỉ nằm ở backend, không đưa ra frontend.
+- **AI không được làm, kể cả khi người dùng yêu cầu:** tự chốt phòng, tự gửi thông báo (Zalo, Discord, Outlook…), ghi đè sheet chính thức, xác nhận giả "đã đủ coach / đã chốt", xuất email hoặc số điện thoại cá nhân. Đây là 5 câu từ chối B26–B30 và cả hai lượt đều đạt 5/5. Mọi thay đổi phải qua key coach duyệt rồi BTC phát.
+- **Ai bị hại nếu AI sai, nhóm chặn thế nào:**
+  - Học viên và giảng viên có thể đến nhầm phòng nếu AI coi phòng pending là phòng đã chốt. Chặn: code đánh dấu phòng pending (`validate_schedule_draft`) và khóa nút duyệt.
+  - Phòng có thể không có coach, hoặc coach bị quá tải. Chặn: code `check_staffing` tính thiếu và quá tải; AI chỉ gợi ý ứng viên kèm nhãn "chờ xác nhận".
+  - AI có thể trích nguồn không có trong dữ liệu. Chặn: `assistant()` loại câu trả lời có tham chiếu ngoài nguồn.
+  - Còn hở: chưa có nhãn T-1, chưa có lịch ngày lễ, chưa đọc cờ trùng ca `L!` (xem `eval/report.md` §4).
 
 ## §10. Phân công & changelog
-- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"): __
-- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`):
+- Phân công có tên: Phí Hoàng Nam (đội trưởng, tài liệu, hỗ trợ UI/UX FE và BE) · Trần Thanh Long (AI engineer) · Phan Hải Đăng (deploy, BE) · Nguyễn Vũ Hoàng (FE). Xem `TEAMS.md`.
+- Dùng AI vào việc gì: Codex và Claude Code hỗ trợ đọc đề, viết code backend/frontend, chấm sơ bộ hai lượt eval (nhóm xác nhận lại), viết tài liệu. Nhóm chịu trách nhiệm kiểm tra. Chi tiết ở `docs/ai-usage.md`.
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
 
 **CP2 $\rightarrow$ CP4** (vd thu hẹp lát cắt, hỏi thêm người dùng, lần cải tiến trước lượt 2)
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về câu thử / lỗi / bằng chứng nào) |
 |---|---|---|
-|  |  |  |
+| 28/11 sáng | Nối model thật cho câu hỏi tự nhiên, chạy lượt 1 (11/30) | CP3 yêu cầu AI thật; benchmark là câu hỏi tự nhiên |
+| 28/11 sáng | Viết lại pain point thành 4 yếu tố; thêm khảo sát n = 3 | Mô tả của nhóm và `evidence/survey/results.csv` |
+| 28/11 ~10:00 | Thêm `check_staffing` và quy tắc staffing vào payload; chạy lượt 2 (17/30) | Nhóm lỗi định biên coach, 7 câu trượt ở lượt 1 (`eval/report.md` §2–3) |
+| 28/11 | Persona và giá cho mô phỏng chi phí; chạy `simulate` 50 phiên | CP4 R6 |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 

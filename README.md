@@ -10,7 +10,7 @@
 
 Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.
 
-Bối cảnh trên do nhóm mô tả, hiện **chưa có ghi chép phỏng vấn hoặc số liệu đo để xác nhận mức độ pain**. Nhóm cần xác nhận quy trình, vai trò key coach/BTC, quyền sửa và duyệt lịch với người trực tiếp phụ trách ngoài nhóm.
+Khảo sát Google Form n = 3 (key coach / lab coach) xác nhận các loại pain: lập lịch bằng AI theo cách riêng, không có công cụ quản lý phòng chung, thông báo qua nhiều kênh. Số phiếu **chưa đạt ngưỡng** bằng chứng; xem [evidence/summary.md](evidence/summary.md).
 
 ## Lát cắt dự kiến
 
@@ -59,11 +59,13 @@ So sánh trên các bộ tình huống có độ khó tương đương và đổ
 
 Ngưỡng đạt cần thống nhất trong `spec.md` §7 và `eval/metric_spec.yaml` trước khi khóa CP2; README này không tự thay đổi các ngưỡng đã chốt. Hiện chưa có kết quả đo.
 
-## Trạng thái tại CP1
+## Trạng thái tại CP4 (28/11)
 
-Bản CP1 tập trung rà soát lịch giảng dạy cho ngày hôm sau. Định hướng đang cập nhật cho CP2 là đề xuất bản nháp lịch tuần và hỗ trợ cập nhật khi phòng thay đổi; cần đồng bộ canvas, kiến trúc, công cụ, benchmark và metric trước khi nộp.
-
-Website, agent, bằng chứng pain và kết quả đánh giá chưa được xác minh hoàn thành. Các mục chức năng phía trên là thiết kế dự kiến; hướng dẫn bên dưới mô tả bộ khung starter và cách phát triển tiếp.
+- **Đã xong:** website lập/rà lịch tuần chạy trên hai workbook BTC; code kiểm trùng phòng, giảng viên, coach và định biên coach theo phòng (`check_staffing`); nhập cập nhật phòng và soạn nháp thông báo; gọi model thật; bộ 30 câu thử (12 thường, 13 khó, 5 từ chối).
+- **Lượt 1:** **11/30 (37%)**, run ID `run-1@20261128-092000`, model `gpt-6-luna`.
+- **Lượt 2 (sau cải tiến định biên coach):** **17/30 (57%)**, run ID `run-2@20261128-100217`, model `deepseek-flash`. Chi tiết ở [eval/report.md](eval/report.md) và [eval/README.md](eval/README.md).
+- **Bằng chứng pain:** khảo sát n = 3 ([evidence/summary.md](evidence/summary.md)), **chưa đạt ngưỡng** R1 (≥20 phiếu hoặc ≥3 phỏng vấn có ghi chép).
+- **Chưa xong / hạn chế:** điểm hai lượt do AI chấm sơ bộ, chưa có người thứ hai chấm; hai lượt khác model; chưa có nhãn T-1, lịch ngày lễ, cờ trùng ca `L!`; chưa có người dùng thử (`validation/log.md`).
 
 ---
 
@@ -142,7 +144,7 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | Chưa xác minh nối model thật; bắt buộc thật từ CP3 | Model chưa chốt |
+| Lời gọi AI ở quyết định trung tâm | Thật | Lượt 1 và 2 gọi model thật trên 30 câu (`traces/run-1.jsonl`, `traces/run-2.jsonl`) |
 | Dữ liệu lịch, phòng và nhân sự | Giả lập | teaching-schedule.xlsx do BTC cung cấp |
 
 ## Dùng AI vào việc gì
