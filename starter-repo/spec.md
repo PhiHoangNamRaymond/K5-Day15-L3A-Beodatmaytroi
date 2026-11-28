@@ -162,10 +162,10 @@ Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py]
     Báo cáo riêng **2 kết quả** cho 2 tác vụ; hiện có **0 ngưỡng thời gian được chốt**.
 
 ## §8. Chi phí khi dùng thật *(guide 4.2)*
-- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-__.csv` (__ phiên)
-- Chi phí / task thành công: __ (model __) · __ (model __)
-- Chi phí / tháng ở quy mô thật: thấp __ · cơ sở __ · cao __ → chi tiết `cost/cost-estimate.md`
-- So với impact / người / tháng (§2): đáng làm không, vì sao: 
+- Persona + giá: `cost/personas.yaml` · lượt mô phỏng: `cost/simulate-1.csv` (50 phiên, seed 42, 9 phiên lỗi JSON)
+- Chi phí / task thành công (tỉ lệ đạt 57%, lượt 2): **$0,126** (deepseek-flash) · $0,042 (gpt-6-luna) · $0,549 (deepseek-v4-pro)
+- Chi phí / tháng ở quy mô thật (deepseek-flash): thấp $4,84 (5 key coach) · cơ sở $9,67 (10) · cao $19,35 (20) → chi tiết `cost/cost-estimate.md`
+- So với impact / người / tháng (§2, 120 phút): chi phí khoảng $0,97 ≈ 25.000 ₫ mỗi key coach mỗi tháng. **Đáng làm**: chỉ cần tiết kiệm khoảng 15 phút/tháng là hòa vốn (giờ công tự ước tính). Rủi ro chính là độ đúng 57% và 18% phiên lỗi JSON, không phải tiền model.
 
 ## §9. Rủi ro & an toàn
 - **Dữ liệu:** chỉ dùng workbook giả lập BTC. Không gửi cột email sang model. Phiếu khảo sát xuất ra đã bỏ tên người được nhắc tới, form không thu tên/email. Workbook gốc và `.env` không commit. API key chỉ nằm ở backend, không đưa ra frontend.
