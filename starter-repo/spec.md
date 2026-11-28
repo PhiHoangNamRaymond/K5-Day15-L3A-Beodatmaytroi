@@ -168,20 +168,27 @@ Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py]
 - So với impact / người / tháng (§2): đáng làm không, vì sao: 
 
 ## §9. Rủi ro & an toàn
-- Dữ liệu: đã ẩn danh gì, không thu gì, không đưa gì vào model gói miễn phí:
-- AI **không được** làm gì kể cả khi người dùng yêu cầu: Không tự ý confirm xếp phòng và thông báo. Vẫn phải qua người duyệt review.
-- Ai có thể bị hại nếu AI sai, và nhóm chặn thế nào: 
+- **Dữ liệu:** chỉ dùng workbook giả lập BTC. Không gửi cột email sang model. Phiếu khảo sát xuất ra đã bỏ tên người được nhắc tới, form không thu tên/email. Workbook gốc và `.env` không commit. API key chỉ nằm ở backend, không đưa ra frontend.
+- **AI không được làm, kể cả khi người dùng yêu cầu:** tự chốt phòng, tự gửi thông báo (Zalo, Discord, Outlook…), ghi đè sheet chính thức, xác nhận giả "đã đủ coach / đã chốt", xuất email hoặc số điện thoại cá nhân. Đây là 5 câu từ chối B26–B30 và cả hai lượt đều đạt 5/5. Mọi thay đổi phải qua key coach duyệt rồi BTC phát.
+- **Ai bị hại nếu AI sai, nhóm chặn thế nào:**
+  - Học viên và giảng viên có thể đến nhầm phòng nếu AI coi phòng pending là phòng đã chốt. Chặn: code đánh dấu phòng pending (`validate_schedule_draft`) và khóa nút duyệt.
+  - Phòng có thể không có coach, hoặc coach bị quá tải. Chặn: code `check_staffing` tính thiếu và quá tải; AI chỉ gợi ý ứng viên kèm nhãn "chờ xác nhận".
+  - AI có thể trích nguồn không có trong dữ liệu. Chặn: `assistant()` loại câu trả lời có tham chiếu ngoài nguồn.
+  - Còn hở: chưa có nhãn T-1, chưa có lịch ngày lễ, chưa đọc cờ trùng ca `L!` (xem `eval/report.md` §4).
 
 ## §10. Phân công & changelog
-- Phân công có tên (theo chặng, chia cặp — guide "Cách chia việc"): __
-- Dùng AI vào việc gì (2–3 dòng; chi tiết `docs/ai-usage.md`):
+- Phân công có tên: Phí Hoàng Nam (đội trưởng, tài liệu, hỗ trợ UI/UX FE và BE) · Trần Thanh Long (AI engineer) · Phan Hải Đăng (deploy, BE) · Nguyễn Vũ Hoàng (FE). Xem `TEAMS.md`.
+- Dùng AI vào việc gì: Codex và Claude Code hỗ trợ đọc đề, viết code backend/frontend, chấm sơ bộ hai lượt eval (nhóm xác nhận lại), viết tài liệu. Nhóm chịu trách nhiệm kiểm tra. Chi tiết ở `docs/ai-usage.md`.
 - Nhật ký thay đổi — **mọi thay đổi sau CP2 19:30 Thứ Sáu 27/11 phải có dòng ở đây**:
 
 **CP2 $\rightarrow$ CP4** (vd thu hẹp lát cắt, hỏi thêm người dùng, lần cải tiến trước lượt 2)
 
 | Thời điểm | Đổi gì | Vì sao (trỏ về câu thử / lỗi / bằng chứng nào) |
 |---|---|---|
-|  |  |  |
+| 28/11 sáng | Nối model thật cho câu hỏi tự nhiên, chạy lượt 1 (11/30) | CP3 yêu cầu AI thật; benchmark là câu hỏi tự nhiên |
+| 28/11 sáng | Viết lại pain point thành 4 yếu tố; thêm khảo sát n = 3 | Mô tả của nhóm và `evidence/survey/results.csv` |
+| 28/11 ~10:00 | Thêm `check_staffing` và quy tắc staffing vào payload; chạy lượt 2 (17/30) | Nhóm lỗi định biên coach, 7 câu trượt ở lượt 1 (`eval/report.md` §2–3) |
+| 28/11 | Persona và giá cho mô phỏng chi phí; chạy `simulate` 50 phiên | CP4 R6 |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 

@@ -185,3 +185,41 @@ def validate_schedule_draft(rows: list) -> list:
             if shared_coaches:
                 add(left, 'coach', 'Lab coach trùng ca: ' + ', '.join(sorted(shared_coaches)), right)
     return issues
+
+
+@tool
+def check_staffing(rows: list, workload: list) -> list:
+    """Kiểm định biên. Input: lịch, workload. Output: số phòng/coach, thiếu, Key Coach, ứng viên tải thấp. Chỉ tính toán."""
+    load = {item['name']: int(item['total']) if str(item.get('total', '')).isdigit() else None for item in workload}
+    peak = max((value for value in load.values() if value is not None), default=None)
+    groups = {}
+    for row in rows:
+        groups.setdefault(row['group_id'], []).append(row)
+    result = []
+    for group_id, members in groups.items():
+        first = members[0]
+        rooms = list(dict.fromkeys(code for row in members for code in ROOM.findall(row['room']) + row.get('extra_rooms', [])))
+        if not (any(row['coach_required'] for row in members) or len(rooms) > 1):
+            continue
+        assigned = list(dict.fromkeys(name for row in members for name in row['coach']))
+        keys = list(dict.fromkeys(name for row in members for name in row.get('key_coaches', [])))
+        busy = {name for other in rows if other['group_id'] != group_id and overlaps(other, first) for name in other['coach']}
+        registered = list(dict.fromkeys(name for row in members for name in row['coaches']))
+        candidates = sorted((name for name in registered if name not in assigned and name not in busy),
+                            key=lambda name: (load.get(name) is None, load.get(name) or 0))
+        missing = max(0, len(rooms) - len(assigned)) if first['format'] == 'offline' else 0
+        if len(rooms) < 2 and not missing and keys:
+            continue
+        result.append({
+            'group_id': group_id, 'date': first['date'], 'class': first['class_name'], 'session': first['session'],
+            'time': first['start'] + '-' + first['end'], 'format': first['format'],
+            'rooms': rooms, 'room_count': len(rooms),
+            'room_status': sorted({row['room_status'] for row in members}),
+            'assigned_coaches': assigned, 'coach_count': len(assigned),
+            'missing_coaches': missing,
+            'key_coaches': keys,
+            'overloaded_assigned': [name for name in assigned if peak is not None and load.get(name) == peak],
+            'candidates_low_load': [{'name': name, 'total_shifts': load.get(name)} for name in candidates[:5]],
+            'max_shifts_in_workload': peak,
+            'sources': [row['source'] for row in members]})
+    return result

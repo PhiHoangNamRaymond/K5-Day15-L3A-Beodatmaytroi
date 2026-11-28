@@ -8,45 +8,48 @@
 sessions: 50        # số phiên mô phỏng — bản nộp ≥50
 seed: 42            # giữ cố định để chạy lại ra cùng chuỗi phiên
 
-users:              # số người dùng thật nếu đưa vào dùng — 3 kịch bản, ở quy mô thật của sản phẩm
-                    # track A: khoá học · track B–F: người dùng của sản phẩm / nhóm nhắm tới, nguồn công khai có link
-  low: 300
-  base: 700
-  high: 1000
-  source: "(ví dụ) track A — thay bằng số của nhóm. Cơ sở: lớp L3 hơn 700 học viên (README hackathon); thấp, cao: (tự ước tính)"
+users:              # người dùng thật của lát cắt là KEY COACH (không phải học viên)
+  low: 5
+  base: 10
+  high: 20
+  source: "Cơ sở 10 = số Key Coach khác nhau trong teaching-schedule.xlsx Khoá 9 (dữ liệu giả lập BTC, đếm bằng check_staffing/key_coaches, 6 lớp L2–L3). Thấp 5: chỉ khối L3 (tự ước tính). Cao 20: cả khoá >1.000 học viên, gấp đôi số lớp (tự ước tính)"
 
-personas:           # ≥3 kiểu người dùng; share cộng lại = 1
+personas:           # đơn vị = 1 key coach
   - name: dung_it
-    share: 0.5              # tỉ lệ người dùng kiểu này
-    uses_per_month: 4       # số phiên / người / tháng
-    turns_per_session: 1    # số lượt hỏi trong một phiên
-    source: "(ví dụ) phỏng vấn P1, P3 — thay bằng nguồn của nhóm"
+    share: 0.4
+    uses_per_month: 6
+    turns_per_session: 1
+    source: "spec.md §2: 4 lần lập lịch tuần + 2 lần xử lý đổi phòng / tháng (ước tính của nhóm, chưa có phỏng vấn)"
   - name: dung_vua
-    share: 0.3
-    uses_per_month: 10
+    share: 0.4
+    uses_per_month: 12
     turns_per_session: 3
-    source: "(ví dụ) khảo sát n = 24, câu 3"
+    source: "spec.md §2: rà lịch 12 lần / tháng (ước tính của nhóm); 3 lượt hỏi / phiên (tự ước tính)"
   - name: dung_nhieu
     share: 0.2
     uses_per_month: 20
     turns_per_session: 5
-    source: "(ví dụ) data/preclass: đếm số lượt / người — cách đếm ở evidence/data-mining.md"
+    source: "(tự ước tính) key coach phụ trách tuần tách phòng nhiều — tuần 19/04 có 42 buổi/nhóm phòng so với 13–27 các tuần khác (teaching-schedule.xlsx)"
 # Mỗi lượt hỏi lấy ngẫu nhiên một đầu vào trong eval/benchmark.csv (type thuong và kho).
 # Persona hỏi kiểu riêng: thêm vào persona đó
 #     types: [thuong, kho, tu_choi]
 # hoặc
 #     inputs: ["câu hỏi kiểu 1", "câu hỏi kiểu 2"]
 
-prices:             # USD / 1 triệu token — chép từ further-reading/model-prices.md của repo đề. ≥2 mức model
-  - model: gemini-3.1-flash-lite
-    input: 0.25
-    output: 1.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
-  - model: gemini-4-hydrogen
-    input: 1.50
-    output: 7.50
-    source: "(ví dụ) https://ai.google.dev/gemini-api/docs/pricing · xem 25/11/2026"
+prices:             # USD / 1 triệu token — further-reading/model-prices.md (BTC tra 25/11/2026)
+  - model: gpt-6-luna
+    input: 0.10
+    output: 0.50
+    source: "https://developers.openai.com/api/docs/pricing · xem 25/11/2026 (tầng Nhỏ, model lượt 1)"
+  - model: deepseek-flash
+    input: 0.30
+    output: 1.20
+    source: "https://api-docs.deepseek.com/quick_start/pricing · giá cao điểm, cache miss · xem 25/11/2026 (model đo token, lượt 2)"
+  - model: deepseek-v4-pro
+    input: 1.32
+    output: 3.96
+    source: "https://api-docs.deepseek.com/quick_start/pricing · giá cao điểm, cache miss · xem 25/11/2026 (tầng mạnh)"
 
 usd_to_vnd:         # tuỳ chọn: điền thì bản tóm tắt in thêm tiền Việt
-  rate:
-  source:
+  rate: 26000
+  source: "(tự ước tính) tỉ giá tham khảo, chưa tra ngày 28/11/2026"
