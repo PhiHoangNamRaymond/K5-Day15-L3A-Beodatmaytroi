@@ -6,6 +6,8 @@
 - **Thành viên và phân công:** [TEAMS.md](TEAMS.md).
 - **Canvas:** [canvas.md](canvas.md).
 
+- **Video demo CP3:** [Xem trên Google Drive](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing). Người dùng xác nhận đã quay; chưa kiểm tra quyền xem ẩn danh.
+
 ## Chạy bản tích hợp hai workbook và DeepSeek
 
 Xem [hướng dẫn chạy và cấu hình hiện tại](docs/RUNNING.md). Nguồn local nằm ở `data-btc/` tại gốc repo; ứng dụng đọc lịch, nhân sự, phân công coach và yêu cầu đổi ca từ hai workbook, lưu bản nháp bằng SQLite. Phần giao diện và API hiện tại đã chuyển khỏi fixture `weekly-demo.json`.
@@ -183,7 +185,7 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · link video: chưa có, bổ sung trước CP4 |
+| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · [Video demo CP3](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing) · chưa kiểm tra quyền xem ẩn danh |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
 
 ## Chạy website lịch tuần

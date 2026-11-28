@@ -4,6 +4,8 @@
 
 ## §0. Quy trình hiện tại *(guide 1.1)*
 
+**Cập nhật từ người dùng ngày 28/11/2026:** Mỗi Key Coach tự dùng Claude để tổng hợp thời khóa biểu, form đăng ký và performance của Lab Coach rồi lập lịch phân công. Hiện chưa có quy chuẩn chung để xếp lịch. Đây là pain được người dùng xác nhận; các bước vận hành dưới đây là mô tả chi tiết trong spec trước đó, cần đối chiếu thêm với ghi chép thực tế. Nguồn: `evidence/summary.md`.
+
 1. Key coach thu thập thời khóa biểu tuần tới cùng biểu mẫu đăng ký ca của giảng viên (lecturer) và lab coach.
 2. Key coach đối chiếu từng buổi học với tình trạng phòng học vật lý, đồng thời ghi nhận riêng các phòng đang ở trạng thái chờ nhà trường xác nhận.
 3. Key coach phân công lab coach vào từng lớp học dựa trên đăng ký ca và điều kiện phòng.

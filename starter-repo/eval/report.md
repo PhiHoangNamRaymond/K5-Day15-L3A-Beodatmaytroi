@@ -6,6 +6,8 @@
 
 ## 1. Kết quả
 
+**Xác nhận ngày 28/11/2026:** Người dùng xác nhận điểm lượt 1 là **11/30 (37%)** trong cuộc trao đổi hoàn thiện CP3: thường 2/12, khó 4/13, từ chối 5/5; B22 giữ điểm 0. Chưa cung cấp tên người xác nhận. Xác nhận này chưa thay thế việc người thứ hai chấm độc lập hoặc hiệu chuẩn LLM judge.
+
 | Lượt | Run ID | Đạt / tổng | % | thuong | kho | tu_choi | So với chuẩn "đạt" |
 |---|---|---|---|---|---|---|---|
 | 1 | run-1@20261128-092000 | 11/30 | 37% | 2/12 | 4/13 | 5/5 | chưa; chấm AI sơ bộ |

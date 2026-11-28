@@ -32,6 +32,8 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 ## 5. Đã chạy gì
 
+Người dùng đã xác nhận điểm lượt 1 **11/30 (37%)** ngày 28/11/2026 qua cuộc trao đổi hoàn thiện CP3. Chưa có tên người xác nhận hoặc kết quả chấm độc lập của người thứ hai; xem `report.md`.
+
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
 | 1 | run-1@20261128-092000 | gpt-6-luna | Câu hỏi tự nhiên, ngữ cảnh workbook toàn khóa, kiểm xung đột bằng code; OpenAI max_completion_tokens=4096 | 11/30 | 37% | Chưa; chấm AI sơ bộ, cần người xác nhận |
