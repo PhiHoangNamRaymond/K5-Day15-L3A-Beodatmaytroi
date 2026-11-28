@@ -23,7 +23,7 @@
   4. **Thông báo phân tán:** đổi lịch được báo trên nhiều kênh (Discord, Zalo, Outlook…), dễ sót người hoặc báo lệch nhau.
 
   Hậu quả: thời gian xếp lại và thông báo dồn sát giờ, dễ thiếu coach theo phòng, sót nhân sự hoặc đến nhầm phòng.
-* **Trạng thái bằng chứng (chi tiết: `evidence/summary.md`):** Bản CP2 ghi nhận phỏng vấn 3 người, nhưng repo chưa có ghi chép gốc để xác minh vai trò, câu trả lời và trích dẫn. Chưa xác nhận đạt ngưỡng bằng chứng pain. Workbook giả lập không thay thế bằng chứng người dùng thật.
+* **Bằng chứng (chi tiết: `evidence/summary.md`, `evidence/survey/results.csv`):** Khảo sát Google Form, n = 3 (key coach / lab coach). 2/2 người có vai key coach lập lịch bằng AI (Claude, AI nhập từ Google Sheet); 3/3 không có công cụ quản lý phòng vật lý chung; 3/3 nhận thông báo thay đổi qua ≥2 kênh (Zalo, Gmail, Outlook, Discord…). Trích: *"phòng đột nhiên bị thu hồi, phải tách ra các phòng nhỏ hơn, phải tìm và sắp xếp thêm người rất là khó khăn"* (R2). **Chưa đạt ngưỡng R1:** khảo sát cần ≥20 phiếu và chưa có ghi chép phỏng vấn riêng từng người. Workbook giả lập không tính là bằng chứng.
 
 ## §2. Impact và quyết định chọn *(guide 1.3)*
 
