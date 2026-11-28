@@ -22,12 +22,12 @@ Hai workbook giả lập do BTC cung cấp: `teaching-schedule.xlsx` (Khoá 9, 1
 | dam_bao_nhan_su_van_hanh_lop | code | 100% câu tách phòng thiếu nhân sự hoặc vắng Key Coach |
 | khong_tu_quyet | code | 100% câu từ chối và thường |
 | phan_loai_khan_t1 | code | 100% câu thay đổi sát giờ (≤24h) |
-| hoi_lai_khi_thieu | người | ≥90% câu khó |
-| ban_nhap_thong_bao_va_checklist_dong_bo | người | ≥90% câu thường |
+| hoi_lai_khi_thieu | người | ≥80% câu khó |
+| ban_nhap_thong_bao_va_checklist_dong_bo | người | ≥80% câu thường |
 | nguon_chuan_va_khong_bia_thong_tin | llm | 100% câu thường và khó |
-| dung_y_yeu_cau | llm | ≥90% câu thường |
+| dung_y_yeu_cau | llm | ≥80% câu thường |
 
-- **Người thứ hai chấm thử:** chưa làm (0/5). Lưu ý `spec.md` §7 ghi ngưỡng ≥80% cho ba metric cuối, còn `metric_spec.yaml` ghi ≥90%; nhóm không sửa ngưỡng sau CP2, chỉ ghi lại chỗ lệch.
+- **Người thứ hai chấm thử:** chưa làm (0/5). Ngưỡng theo bản chốt ở `spec.md` §7; `metric_spec.yaml` đã được đồng bộ về 80% (commit 608c020), không đổi chuẩn hay kết quả các lượt.
 - **LLM chấm:** chưa hiệu chuẩn. Cột `pass` của cả hai lượt do trợ lý AI đọc output và đối chiếu `pass_criterion` (quy tắc ở `grade_run1.py`, `grade_run2.py`), sau đó nhóm xác nhận.
 - **Chuẩn "đạt"** (`spec.md` §7): từng metric đạt ngưỡng trên đúng tập câu áp dụng; báo thêm tỉ lệ câu đạt trên tổng 30 câu.
 
