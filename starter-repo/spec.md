@@ -189,6 +189,7 @@ Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py]
 | 28/11 sáng | Viết lại pain point thành 4 yếu tố; thêm khảo sát n = 3 | Mô tả của nhóm và `evidence/survey/results.csv` |
 | 28/11 ~10:00 | Thêm `check_staffing` và quy tắc staffing vào payload; chạy lượt 2 (17/30) | Nhóm lỗi định biên coach, 7 câu trượt ở lượt 1 (`eval/report.md` §2–3) |
 | 28/11 | Persona và giá cho mô phỏng chi phí; chạy `simulate` 50 phiên | CP4 R6 |
+| 28/11 ~11:15 | Giao diện: thêm lưới lịch tuần (`WeekCalendar.tsx`) làm mặc định, màu theo trạng thái (đủ căn cứ / cần xác minh / online / có đề xuất), bảng cũ giữ ở chế độ Danh sách; đổi sang tông sáng | Key coach cần nhìn cả tuần theo giờ để thấy buổi chồng giờ và buổi cần xác minh; không đổi logic, API hay kết quả eval |
 
 **Sau CP4 (đến 23:59 Thứ Bảy 28/11)** (sửa theo góp ý — không sửa chuẩn "đạt", câu thử, số bằng chứng, kết quả các lượt đã chạy)
 
