@@ -65,11 +65,12 @@ So sánh trên các bộ tình huống có độ khó tương đương và đổ
 
 Ngưỡng đạt cần thống nhất trong `spec.md` §7 và `eval/metric_spec.yaml` trước khi khóa CP2; README này không tự thay đổi các ngưỡng đã chốt. Hiện chưa có kết quả đo.
 
-## Trạng thái tại CP1
+## Trạng thái tại CP3 (28/11)
 
-Bản CP1 tập trung rà soát lịch giảng dạy cho ngày hôm sau. Định hướng đang cập nhật cho CP2 là đề xuất bản nháp lịch tuần và hỗ trợ cập nhật khi phòng thay đổi; cần đồng bộ canvas, kiến trúc, công cụ, benchmark và metric trước khi nộp.
+- **Đã xong:** website lập/rà lịch tuần chạy trên hai workbook BTC; kiểm trùng phòng, giảng viên, coach bằng code; nhập cập nhật phòng và soạn nháp thông báo; gọi model thật; bộ 30 câu thử (12 thường, 13 khó, 5 từ chối).
+- **Lượt 1:** **11/30 (37%)**, gồm thường 2/12, khó 4/13, từ chối 5/5. Run ID `run-1@20261128-092000`, xem [eval/report.md](eval/report.md). Điểm do AI chấm sơ bộ và nhóm đã xác nhận; chưa có người thứ hai chấm độc lập.
 
-Website, agent, bằng chứng pain và kết quả đánh giá chưa được xác minh hoàn thành. Các mục chức năng phía trên là thiết kế dự kiến; hướng dẫn bên dưới mô tả bộ khung starter và cách phát triển tiếp.
+- **Chưa xong:** bằng chứng pain chưa đạt ngưỡng (chưa có ghi chép phỏng vấn P1–P3); chưa có lượt 2 và mục cải tiến trong report; mô phỏng chi phí mới ở mức thử, persona vẫn là số ví dụ.
 
 ---
 
@@ -148,7 +149,7 @@ Nhóm dùng stack khác (Node, Streamlit, notebook…): sửa hàm `run_app()` t
 
 | Thành phần | Thật / Giả | Ghi chú |
 |---|---|---|
-| Lời gọi AI ở quyết định trung tâm | Chưa xác minh nối model thật; bắt buộc thật từ CP3 | Model chưa chốt |
+| Lời gọi AI ở quyết định trung tâm | Thật | Lượt 1 gọi model thật trên 30 câu (`traces/run-1.jsonl`); model cấu hình trong `.env` |
 | Dữ liệu lịch, phòng và nhân sự | Giả lập | teaching-schedule.xlsx do BTC cung cấp |
 
 ## Dùng AI vào việc gì

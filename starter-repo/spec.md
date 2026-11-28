@@ -76,7 +76,7 @@ flowchart TD
 
 ### 4.4. Hợp đồng công cụ dự kiến (Tools Contract)
 
-Khung mã nguồn tại [codebase/tools.py](codebase/tools.py) hiện mới có hàm mẫu `search_example`; các công cụ cần triển khai đầy đủ theo hợp đồng dưới đây:
+Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py](codebase/tools.py), mỗi hàm có `@tool` để ghi trace:
 
 | Tên công cụ (hàm đề xuất) | Đầu vào (Input) | Đầu ra (Output) | Tác động & Ràng buộc an toàn |
 |---|---|---|---|
@@ -103,7 +103,7 @@ Khung mã nguồn tại [codebase/tools.py](codebase/tools.py) hiện mới có 
 
 * **Cấu trúc dữ liệu bảng tính (`teaching-schedule.xlsx`):** Dự kiến khai thác 4 sheet gồm `Khoá 9 (GĐ1)` (lịch học theo tuần), `Dang_ky_chi_tiet` (đăng ký ca của nhân sự), `Nhan_su` (danh sách và vai trò giảng viên/lab coach) và `Lịch sử chỉnh sửa` (vết thay đổi).
 * **Dữ liệu tình huống cập nhật:** Các thông báo đổi/thu hồi phòng và mốc **bản lịch đã thông báo** được cung cấp trực tiếp từ người dùng hoặc qua bộ dữ liệu mô phỏng có gắn nhãn trạng thái rõ ràng.
-* **Trạng thái kỹ thuật hiện tại:** Đã hoàn thiện thiết kế luồng xử lý và hợp đồng dữ liệu; chưa xác minh hoàn tất giao diện website và chưa kết nối model thật chạy toàn bộ luồng ([README](README.md)).
+* **Trạng thái kỹ thuật tại CP3 (28/11):** Backend Python đọc hai workbook BTC (`codebase/xlsx_reader.py`, `excel_data.py`), có 3 công cụ, kiểm ràng buộc bằng code và lưu nháp SQLite (`store.py`). Frontend React/Vite cho phép chọn tuần, sửa nháp, nhập cập nhật phòng và duyệt bản bàn giao. Model thật được gọi qua API tương thích OpenAI (`codebase/ai.py`). Lượt 1 chạy model thật trên 30 câu: **11/30 (37%)**, run ID `run-1@20261128-092000` ([eval/report.md](eval/report.md)). Hệ thống không tự ghi lịch chính thức và không tự gửi thông báo.
 
 ## §5. Kịch bản khó và yêu cầu vượt quyền *(guide 2.3)*
 
