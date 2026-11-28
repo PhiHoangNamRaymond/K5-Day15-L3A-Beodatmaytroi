@@ -16,7 +16,7 @@ Xem [hướng dẫn chạy và cấu hình hiện tại](docs/RUNNING.md). Ngu�
 
 Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.
 
-Spec CP2 ghi 3 người ngoài nhóm xác nhận thiếu công cụ quản lý chung. Hồ sơ phỏng vấn và trích dẫn trong `evidence/` vẫn chưa được điền, nên kết quả này đang chờ đối chiếu với ghi chép gốc của nhóm.
+Khảo sát Google Form n = 3 (key coach / lab coach) xác nhận các loại pain: lập lịch bằng AI theo cách riêng, không có công cụ quản lý phòng chung, thông báo qua nhiều kênh. Số phiếu **chưa đạt ngưỡng** bằng chứng; xem [evidence/summary.md](evidence/summary.md).
 
 ## Lát cắt dự kiến
 
@@ -65,12 +65,13 @@ So sánh trên các bộ tình huống có độ khó tương đương và đổ
 
 Ngưỡng đạt cần thống nhất trong `spec.md` §7 và `eval/metric_spec.yaml` trước khi khóa CP2; README này không tự thay đổi các ngưỡng đã chốt. Hiện chưa có kết quả đo.
 
-## Trạng thái tại CP3 (28/11)
+## Trạng thái tại CP4 (28/11)
 
-- **Đã xong:** website lập/rà lịch tuần chạy trên hai workbook BTC; kiểm trùng phòng, giảng viên, coach bằng code; nhập cập nhật phòng và soạn nháp thông báo; gọi model thật; bộ 30 câu thử (12 thường, 13 khó, 5 từ chối).
-- **Lượt 1:** **11/30 (37%)**, gồm thường 2/12, khó 4/13, từ chối 5/5. Run ID `run-1@20261128-092000`, xem [eval/report.md](eval/report.md). Điểm do AI chấm sơ bộ và nhóm đã xác nhận; chưa có người thứ hai chấm độc lập.
-
-- **Chưa xong:** bằng chứng pain chưa đạt ngưỡng (chưa có ghi chép phỏng vấn P1–P3); chưa có lượt 2 và mục cải tiến trong report; mô phỏng chi phí mới ở mức thử, persona vẫn là số ví dụ.
+- **Đã xong:** website lập/rà lịch tuần chạy trên hai workbook BTC; code kiểm trùng phòng, giảng viên, coach và định biên coach theo phòng (`check_staffing`); nhập cập nhật phòng và soạn nháp thông báo; gọi model thật; bộ 30 câu thử (12 thường, 13 khó, 5 từ chối).
+- **Lượt 1:** **11/30 (37%)**, run ID `run-1@20261128-092000`, model `gpt-6-luna`.
+- **Lượt 2 (sau cải tiến định biên coach):** **17/30 (57%)**, run ID `run-2@20261128-100217`, model `deepseek-flash`. Chi tiết ở [eval/report.md](eval/report.md) và [eval/README.md](eval/README.md).
+- **Bằng chứng pain:** khảo sát n = 3 ([evidence/summary.md](evidence/summary.md)), **chưa đạt ngưỡng** R1 (≥20 phiếu hoặc ≥3 phỏng vấn có ghi chép).
+- **Chưa xong / hạn chế:** điểm hai lượt do AI chấm sơ bộ, chưa có người thứ hai chấm; hai lượt khác model; chưa có nhãn T-1, lịch ngày lễ, cờ trùng ca `L!`; chưa có người dùng thử (`validation/log.md`).
 
 ---
 

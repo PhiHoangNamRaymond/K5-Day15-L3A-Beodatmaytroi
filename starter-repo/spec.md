@@ -33,7 +33,7 @@
 | Lập lịch tuần và xử lý phòng đổi | 1 key coach | 4 lần lập, 2 lần cập nhật | 25 phút/lần lập, 10 phút/lần cập nhật | 120 phút | **Chọn.** Bao phủ cả hai luồng vận hành chính; có thể dựng và kiểm thử bằng dữ liệu giả lập cùng một bản lịch đã thông báo. |
 | Tối ưu lịch toàn khóa | 1 key coach | 1 lần | 45 phút | 45 phút | Loại. Phạm vi vượt quá chu kỳ một tuần và đòi hỏi dữ liệu khả dụng của nhân sự, phòng học qua nhiều tuần. |
 
-* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**. Các số tần suất và thời gian trong bảng hiện là **tự ước tính**, chưa có ghi chép đo hoặc phỏng vấn để kiểm chứng.
+* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**. Các số tần suất và thời gian trong bảng hiện là **tự ước tính**. Khảo sát (n = 3) chỉ xác nhận chu kỳ: lịch phân công "thường sẽ là theo tuần" (R2), còn coach nhận lịch "theo ngày" (R1, R3). Chưa có số phút đo được.
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
 
