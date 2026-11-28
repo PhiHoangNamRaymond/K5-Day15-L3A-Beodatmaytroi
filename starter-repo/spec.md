@@ -15,8 +15,14 @@
 
 * **Người dùng chính (một vai cụ thể):** Key coach.
 * **Việc cần hoàn thành (JTBD):** Phân công nhân sự (lecturer, lab coach) vào lớp học, sắp xếp lớp học vào phòng học vật lý phù hợp, đồng thời điều chỉnh và thông báo kịp thời cho các bên khi thiếu phòng hoặc lịch học thay đổi sát giờ.
-* **Công cụ hiện tại & điểm gãy:** Sử dụng các bảng Google Sheets rời rạc giữa BTC và đội lab coach, kết hợp biểu mẫu đổi buổi và nhắn tin thủ công qua nhóm Zalo; quy trình dễ quá tải khi thiếu phòng (buộc phải tách lớp thành nhiều phòng nhỏ) hoặc có thay đổi phòng học sát giờ.
-* **Pain point cốt lõi:** Key coach — khi phải tách lớp sang các phòng học vật lý nhỏ hơn và sắp xếp lại nhân sự lúc thiếu phòng hoặc lịch đổi đột xuất — bị vướng vì không có hệ thống quản lý phòng/lớp thống nhất, lịch nằm phân tán ở nhiều bảng phải dò tay và đợi nhiều bên duyệt — hậu quả là thời gian chuyển đổi và thông báo cho giảng viên, lab coach quá gấp, dễ thiếu coach theo từng phòng, sót nhân sự hoặc đến nhầm phòng.
+* **Công cụ hiện tại & điểm gãy:** Thông tin nằm rải rác ở nhiều nơi: thời khóa biểu, form đăng ký và performance của lab coach, tình trạng phòng. Mỗi key coach tự dùng Claude để tổng hợp và lập lịch phân công theo cách riêng, không có quy chuẩn chung. Thông báo đổi lịch phân công đi qua nhiều kênh khác nhau (Discord, Zalo, Outlook…).
+* **Pain point cốt lõi:** Key coach khó lập và giữ đúng lịch phân công vì bốn yếu tố cùng lúc:
+  1. **Thông tin rải rác:** lịch học, đăng ký ca và trạng thái phòng nằm ở nhiều bảng, phải tự gom và đối chiếu.
+  2. **Không có quy chuẩn chung:** mỗi key coach tự dùng Claude lập lịch theo cách riêng, kết quả khó kiểm và khó bàn giao.
+  3. **Đầu vào biến động:** quỹ lab coach thay đổi từng ngày; tình trạng phòng học vật lý không chắc chắn (chờ duyệt, bị thu hồi, phải tách phòng).
+  4. **Thông báo phân tán:** đổi lịch được báo trên nhiều kênh (Discord, Zalo, Outlook…), dễ sót người hoặc báo lệch nhau.
+
+  Hậu quả: thời gian xếp lại và thông báo dồn sát giờ, dễ thiếu coach theo phòng, sót nhân sự hoặc đến nhầm phòng.
 * **Trạng thái bằng chứng (chi tiết: `evidence/summary.md`):** Bản CP2 ghi nhận phỏng vấn 3 người, nhưng repo chưa có ghi chép gốc để xác minh vai trò, câu trả lời và trích dẫn. Chưa xác nhận đạt ngưỡng bằng chứng pain. Workbook giả lập không thay thế bằng chứng người dùng thật.
 
 ## §2. Impact và quyết định chọn *(guide 1.3)*
@@ -76,7 +82,7 @@ flowchart TD
 
 ### 4.4. Hợp đồng công cụ dự kiến (Tools Contract)
 
-Khung mã nguồn tại [codebase/tools.py](codebase/tools.py) hiện mới có hàm mẫu `search_example`; các công cụ cần triển khai đầy đủ theo hợp đồng dưới đây:
+Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py](codebase/tools.py), mỗi hàm có `@tool` để ghi trace:
 
 | Tên công cụ (hàm đề xuất) | Đầu vào (Input) | Đầu ra (Output) | Tác động & Ràng buộc an toàn |
 |---|---|---|---|
@@ -103,7 +109,7 @@ Khung mã nguồn tại [codebase/tools.py](codebase/tools.py) hiện mới có 
 
 * **Cấu trúc dữ liệu bảng tính (`teaching-schedule.xlsx`):** Dự kiến khai thác 4 sheet gồm `Khoá 9 (GĐ1)` (lịch học theo tuần), `Dang_ky_chi_tiet` (đăng ký ca của nhân sự), `Nhan_su` (danh sách và vai trò giảng viên/lab coach) và `Lịch sử chỉnh sửa` (vết thay đổi).
 * **Dữ liệu tình huống cập nhật:** Các thông báo đổi/thu hồi phòng và mốc **bản lịch đã thông báo** được cung cấp trực tiếp từ người dùng hoặc qua bộ dữ liệu mô phỏng có gắn nhãn trạng thái rõ ràng.
-* **Trạng thái kỹ thuật hiện tại:** Đã hoàn thiện thiết kế luồng xử lý và hợp đồng dữ liệu; chưa xác minh hoàn tất giao diện website và chưa kết nối model thật chạy toàn bộ luồng ([README](README.md)).
+* **Trạng thái kỹ thuật tại CP3 (28/11):** Backend Python đọc hai workbook BTC (`codebase/xlsx_reader.py`, `excel_data.py`), có 3 công cụ, kiểm ràng buộc bằng code và lưu nháp SQLite (`store.py`). Frontend React/Vite cho phép chọn tuần, sửa nháp, nhập cập nhật phòng và duyệt bản bàn giao. Model thật được gọi qua API tương thích OpenAI (`codebase/ai.py`). Lượt 1 chạy model thật trên 30 câu: **11/30 (37%)**, run ID `run-1@20261128-092000` ([eval/report.md](eval/report.md)). Hệ thống không tự ghi lịch chính thức và không tự gửi thông báo.
 
 ## §5. Kịch bản khó và yêu cầu vượt quyền *(guide 2.3)*
 
