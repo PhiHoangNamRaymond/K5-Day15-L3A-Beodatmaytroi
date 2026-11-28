@@ -1,5 +1,6 @@
 # Metric spec — "thế nào là tốt" cho trợ lý Key Coach điều phối phòng học vật lý, nhân sự và thông báo gấp khi lịch thay đổi.
 # CHỐT TRƯỚC 19:30 Thứ Sáu 27/11 (CP2), KHÔNG SỬA SAU.
+# Đính chính theo xác nhận của người dùng: spec.md §7 là bản chốt; ba ngưỡng tỷ lệ đạt dưới đây được đồng bộ về 80%, không thay đổi chuẩn trong spec hoặc kết quả lượt đã chạy.
 
 metrics:
   # --- Nhóm 1: Metric chấm bằng code (điều kiện cứng về an toàn vận hành — mục tiêu 100%) ---
@@ -31,13 +32,13 @@ metrics:
   - name: "hoi_lai_khi_thieu"
     definition: "Với câu kho thiếu thông tin tối thiểu (ngày, buổi, lớp, danh sách phòng mới) hoặc mơ hồ nhiều buổi (vd Deployment tuần 04/05), AI hỏi lại đúng phần còn thiếu và không tự đoán; đồng thời chuẩn hóa đúng tên/mã buổi bị gõ lệch ('Labcoach AY' -> 'Lab Coach AY', 'HACKATHON 15' <-> 'HACKATHON')."
     grader: "nguoi"
-    threshold: "≥ 90% câu kho; người thứ hai chấm 5 output khớp ≥ 4/5"
+    threshold: "≥ 80% câu kho; người thứ hai chấm 5 output khớp ≥ 4/5"
     why: "11/22 đơn đổi buổi ghi chữ tự do và 6/22 gõ sai định dạng tên; đoán sai buổi hoặc phòng khi gấp sẽ tạo thêm một vòng sửa mới."
 
   - name: "ban_nhap_thong_bao_va_checklist_dong_bo"
     definition: "Khi có thay đổi phòng hoặc nhân sự, bản nháp thông báo cho giảng viên và lab coach phải đủ 4 ý hành động ngay (buổi/giờ, phòng mới hoặc trạng thái chờ xác nhận, vai trò/phân công, bước xác nhận) và kèm checklist các sheet cần đồng bộ sau khi duyệt (Khoá 9 (GĐ1), Lịch lab, Workload - Lab coach, Đổi buổi (form)); chấm 0/1."
     grader: "nguoi"
-    threshold: "≥ 90% câu thuong; người thứ hai chấm 5 câu khớp ≥ 4/5"
+    threshold: "≥ 80% câu thuong; người thứ hai chấm 5 câu khớp ≥ 4/5"
     why: "Giải quyết trực tiếp 2 nút thắt trong spec.md §1: rút ngắn thời gian soạn tin báo gấp cho giảng viên/lab coach và chặn lỗi 'chưa cập nhật sheet' (5/22 đơn) làm lệch 2 bảng."
 
   # --- Nhóm 3: Metric do AI chấm (LLM judge, có hiệu chuẩn) ---
@@ -50,5 +51,5 @@ metrics:
   - name: "dung_y_yeu_cau"
     definition: "Câu trả lời xử lý đúng buổi gốc, đúng phạm vi (đúng tuần, đúng Sáng/Chiều, đúng đối tượng cần báo) và không bỏ sót ràng buộc của Key Coach; LLM judge đối chiếu với pass_criterion trả PASS/FAIL. Hiệu chuẩn: ≥ 20 câu chấm tay, judge khớp ≥ 85%; chạy ≥ 3 lần mỗi câu."
     grader: "llm"
-    threshold: "≥ 90% câu thuong"
+    threshold: "≥ 80% câu thuong"
     why: "Phương án đúng luật nhưng sai buổi hoặc thiếu đối tượng cần thông báo vẫn làm Key Coach mất thêm thời gian dò lại thủ công."
