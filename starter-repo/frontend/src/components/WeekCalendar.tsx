@@ -28,7 +28,7 @@ interface Block {
   columns: number;
 }
 
-const HOUR = 64; // px per hour
+const HOUR = 44; // px per hour
 const DAY_NAMES = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 const TONE_LABEL: Record<Tone, string> = {
   ready: "Đủ căn cứ",
@@ -100,8 +100,9 @@ export function WeekCalendar({ week, review, proposal, pending, busy, weeks = []
   const [selected, setSelected] = useState<string>();
   const blocks = useMemo(() => buildBlocks(review, proposal, pending), [review, proposal, pending]);
   const days = useMemo(() => Array.from({ length: 7 }, (_, index) => addDays(week, index)), [week]);
-  const first = Math.min(8 * 60, ...blocks.map((block) => block.start));
-  const last = Math.max(18 * 60, ...blocks.map((block) => block.end));
+  // Y axis follows the week's data (all sessions fall in 09:00–20:00), not a fixed office day.
+  const first = blocks.length ? Math.min(...blocks.map((block) => block.start)) : 8 * 60;
+  const last = blocks.length ? Math.max(...blocks.map((block) => block.end)) : 18 * 60;
   const startHour = Math.floor(first / 60);
   const endHour = Math.ceil(last / 60);
   const hours = Array.from({ length: endHour - startHour }, (_, index) => startHour + index);

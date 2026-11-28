@@ -328,13 +328,13 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; border: 1px solid; }
 .calendar-body { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); }
 .calendar-body.with-detail { grid-template-columns: minmax(0, 1fr); }
-.calendar-scroll { min-width: 0; }
+.calendar-scroll { min-width: 0; overflow: auto; max-height: calc(100vh - 120px); overscroll-behavior: contain; }
 .calendar-grid { display: grid; grid-template-columns: 52px repeat(7, minmax(0, 1fr)); grid-template-rows: auto calc(var(--hours) * var(--hour)); }
 .cal-corner, .cal-day-head { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid var(--line); }
 .cal-corner { display: flex; align-items: center; justify-content: center; gap: 2px; }
 .cal-corner button { min-height: 28px; width: 24px; padding: 0; border: 0; background: transparent; font-size: .95rem; color: var(--ink); }
 .cal-corner button:hover:not(:disabled) { background: #f1f2f6; }
-.cal-day-head { display: grid; justify-items: center; align-content: center; padding: 14px 2px; min-width: 0; border-left: 1px solid var(--line); font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; gap: 2px; }
+.cal-day-head { display: grid; justify-items: center; align-content: center; padding: 10px 2px; min-width: 0; border-left: 1px solid var(--line); font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; gap: 2px; }
 .cal-day-head strong { font-size: .86rem; color: var(--ink); letter-spacing: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .cal-day-head.weekend { background: #fafbfc; }
 .cal-times { position: relative; }
@@ -389,6 +389,6 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .detail-issues .icon { width: 15px; height: 15px; }
 .detail-issues ul { margin: 6px 0 0; padding-left: 18px; }
 .calendar-detail > button.primary { justify-self: stretch; }
-@media (max-width: 760px) { .calendar-scroll { overflow-x: auto; } .calendar-grid { min-width: 720px; } }
+@media (max-width: 760px) { .calendar-grid { min-width: 720px; } }
 @media (max-width: 1100px) { .calendar-body.with-detail { grid-template-columns: minmax(0, 1fr); } .calendar-detail { position: static; width: auto; max-height: none; margin: 8px; } }
 @media (max-width: 900px) { .app-layout { padding: 0; gap: 0; } .app-sidebar { border-radius: 0; height: auto; } .main-area { border-radius: 0; border: 0; } }
