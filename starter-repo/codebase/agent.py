@@ -78,6 +78,27 @@ def parsed_reply(reply):
     return value
 
 
+FORMAT_RETRIES = 1
+
+
+def ask_json(payload, check=None):
+    """Call the model and parse its JSON. A malformed or incomplete reply is retried once.
+
+    Network/provider errors (RuntimeError) are not retried here, and safety checks done by callers
+    (e.g. references outside the sources) never trigger a retry.
+    """
+    for attempt in range(FORMAT_RETRIES + 1):
+        reply = call_model(SYSTEM, json.dumps(payload, ensure_ascii=False))
+        try:
+            data = parsed_reply(reply)
+            if check:
+                check(data)
+            return reply, data
+        except ValueError:
+            if attempt == FORMAT_RETRIES:
+                raise
+
+
 def weekly_review(week_id, changes, update_id='', propose=False):
     week = read_weekly_schedule_data(week_id)
     impact = diff_room_updates(week['rows'], week['updates'], update_id) if update_id else None
@@ -93,10 +114,10 @@ def weekly_review(week_id, changes, update_id='', propose=False):
                            'rows': context_for(rows), 'plans': plans,
                            'schema': {'choice': 'chỉ số nguyên từ 1', 'summary': 'giải thích ngắn', 'questions': ['việc cần xác nhận']}}
                 try:
-                    reply = call_model(SYSTEM, json.dumps(payload, ensure_ascii=False))
-                    result = parsed_reply(reply)
-                    if type(result.get('choice')) is not int or not 1 <= result['choice'] <= len(plans):
-                        raise ValueError('Model chọn phương án ngoài danh sách; dùng phương án quy tắc an toàn.')
+                    def valid_choice(data):
+                        if type(data.get('choice')) is not int or not 1 <= data['choice'] <= len(plans):
+                            raise ValueError('Model chọn phương án ngoài danh sách; dùng phương án quy tắc an toàn.')
+                    reply, result = ask_json(payload, valid_choice)
                     choice, method = result['choice'] - 1, 'model'
                     explanation = str(result.get('summary', ''))[:4000]
                     questions = [str(q)[:500] for q in result.get('questions', [])[:10]] if isinstance(result.get('questions'), list) else []
@@ -131,10 +152,10 @@ def assistant(week, changes, question):
     payload = {'task': 'Giải thích lịch, xung đột và hướng xử lý từ nguồn, không sửa dữ liệu.',
                'question': question, 'rows': context_for(review['rows']), 'issues': review['issues'],
                'schema': {'answer': 'câu trả lời tiếng Việt, nêu điều chưa biết', 'references': ['nguồn đúng trong rows']}}
-    reply = call_model(SYSTEM, json.dumps(payload, ensure_ascii=False))
-    data = parsed_reply(reply)
-    if not isinstance(data.get('answer'), str) or not isinstance(data.get('references'), list):
-        raise ValueError('Phản hồi AI thiếu câu trả lời hoặc nguồn.')
+    def valid_shape(data):
+        if not isinstance(data.get('answer'), str) or not isinstance(data.get('references'), list):
+            raise ValueError('Phản hồi AI thiếu câu trả lời hoặc nguồn.')
+    reply, data = ask_json(payload, valid_shape)
     if any(ref not in allowed for ref in data['references']):
         raise ValueError('AI trích nguồn không có trong dữ liệu; không hiển thị nội dung thiếu căn cứ.')
     return {'answer': data['answer'][:8000], 'references': data['references'],
@@ -156,10 +177,10 @@ def answer(text: str) -> dict:
                    'staffing': check_staffing(rows, source['workload']),
                    'staffing_rules': STAFFING_RULES,
                    'schema': {'answer': 'câu trả lời tiếng Việt, dẫn nguồn và nêu rõ phần chưa đủ căn cứ'}}
-        reply = call_model(SYSTEM, json.dumps(payload, ensure_ascii=False))
-        result = parsed_reply(reply)
-        if not isinstance(result.get('answer'), str) or not result['answer'].strip():
-            raise ValueError('Phản hồi AI thiếu câu trả lời.')
+        def has_answer(data):
+            if not isinstance(data.get('answer'), str) or not data['answer'].strip():
+                raise ValueError('Phản hồi AI thiếu câu trả lời.')
+        _, result = ask_json(payload, has_answer)
         return {'output': result['answer']}
     try:
         result = weekly_review(match[2], {}, match[3] or '', propose=match[1].casefold() == 'lập lịch')

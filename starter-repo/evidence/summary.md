@@ -26,14 +26,14 @@ Cần kiểm lại bằng phỏng vấn ≥3 key coach/lab coach ngoài nhóm: m
 
 | Nguồn | Đạt ngưỡng? | File |
 |---|---|---|
-| Đào data (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | ☐ | `evidence/data-mining.md` |
-| Phỏng vấn (≥3 người ngoài nhóm, đúng người dùng) | ☐ | `evidence/interviews/P1.md`… |
+| Đào data (x/N, %, cách đếm chạy lại được, ≥5 ví dụ) | Không làm | — (workbook BTC là dữ liệu giả lập, không tính là bằng chứng) |
+| Phỏng vấn (≥3 người ngoài nhóm, đúng người dùng) | Chưa làm | chưa có file ghi chép |
 | Khảo sát (≥20 người ngoài nhóm, đúng người dùng) | ☐ chưa đạt: n = 3 | `evidence/survey/results.csv` |
 
 ## 2. Số chính
 
-- Đào data: __/__ (__%) …
-- Phỏng vấn: __/3 người gặp *(n nhỏ không ghi %)* · số lần / tháng: P1 __, P2 __, P3 __ · mỗi lần mất __–__ phút
+- Đào data: không làm.
+- Phỏng vấn: chưa có ghi chép phỏng vấn riêng từng người.
 - Khảo sát: n = 3 (1 Key Coach, 1 người lúc làm Key Coach lúc làm Lab Coach, 1 Lab Coach). n nhỏ nên chỉ ghi x/n:
   - Người có vai key coach lập lịch bằng AI nhập từ Google Sheet hoặc Claude: **2/2**
   - Không có công cụ chuyên dụng để quản lý phòng vật lý ("chưa có", Discord + LMS, "tự quản lý"): **3/3**

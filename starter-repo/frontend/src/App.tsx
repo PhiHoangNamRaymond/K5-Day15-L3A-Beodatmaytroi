@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "./components/Icon";
 import { ScheduleSidebar } from "./components/ScheduleSidebar";
 import { ScheduleTable } from "./components/ScheduleTable";
+import { WeekCalendar } from "./components/WeekCalendar";
 import { scheduleApi } from "./features/schedule/api";
 import { shortDate } from "./features/schedule/types";
 import type { Assignment, Changes, Draft, Handoff, Review, AIStatus, DatasetMetadata, SourceData } from "./features/schedule/types";
@@ -49,6 +50,7 @@ export default function App() {
   const [status, setStatus] = useState("Đang đọc lịch từ Excel…");
   const [view, setView] = useState<View>("schedule");
   const [sourceId, setSourceId] = useState<string>();
+  const [layout, setLayout] = useState<"calendar" | "list">("calendar");
 
   async function run(task: () => Promise<void>) {
     setBusy(true);
@@ -98,7 +100,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (view !== "schedule" || !sourceId) return;
+    if (view !== "schedule" || layout !== "list" || !sourceId) return;
     const row = document.getElementById("row-" + sourceId);
     const details = row?.querySelector("details");
     if (details) {
@@ -107,7 +109,7 @@ export default function App() {
       row?.scrollIntoView({ block: "nearest" });
     }
     setSourceId(undefined);
-  }, [view, sourceId]);
+  }, [view, sourceId, layout]);
 
   function apply(ids: string[]) {
     const changes = { ...draft.changes };
@@ -228,10 +230,17 @@ export default function App() {
       </section>
       <div className="statusbar"><Icon name={busy ? "clock" : "info"} /><p id="status" role="status">{status}</p><span className="draft-state">{approved ? "Đã duyệt" : "Bản nháp"}</span></div>
       <div className={view === "schedule" ? "workspace" : "workspace focused-view"} aria-busy={busy}>
-        {view === "schedule" && <ScheduleTable review={review} proposal={proposal} changes={draft.changes} busy={busy} pending={pending}
+        {view === "schedule" && <div className="view-switch" role="group" aria-label="Kiểu hiển thị">
+          <button type="button" aria-pressed={layout === "calendar"} onClick={() => setLayout("calendar")}><Icon name="calendar" />Lịch tuần</button>
+          <button type="button" aria-pressed={layout === "list"} onClick={() => setLayout("list")}><Icon name="document" />Danh sách</button>
+        </div>}
+        {view === "schedule" && layout === "calendar" && draft.week && <WeekCalendar week={draft.week} review={review} proposal={proposal} pending={pending} busy={busy}
+          weeks={weeks} onWeek={(week) => void run(() => load(week))}
+          onOpen={(id) => { setSourceId(id); setLayout("list"); }} />}
+        {view === "schedule" && layout === "list" && <ScheduleTable review={review} proposal={proposal} changes={draft.changes} busy={busy} pending={pending}
           onEdit={edit} onApply={(id) => apply([id])} onSkip={(id) => setProposal(withoutSuggestion(proposal, id))} />}
         {(view === "changes" || view === "review") && <ScheduleSidebar key={draft.week} week={draft.week} onCreated={async (id) => { setProposal({}); await run(() => refresh({...draft, update: id}, "Đã lưu cập nhật phòng và kiểm tra lại lịch.")); }} view={view} review={review} update={draft.update} busy={busy} pending={pending} approved={!!approved}
-          onSource={(id) => { setSourceId(id); setView("schedule"); }}
+          onSource={(id) => { setSourceId(id); setLayout("list"); setView("schedule"); }}
           onUpdate={selectUpdate} onCopy={() => void run(async () => {
             if (!review?.notice) return;
             await navigator.clipboard.writeText(review.notice);
