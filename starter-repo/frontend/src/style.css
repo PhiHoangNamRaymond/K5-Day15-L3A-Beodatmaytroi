@@ -295,7 +295,7 @@ textarea { resize: vertical; }
 .sidebar-note > .icon { color: #5b6cf0; }
 .sidebar-user { border-color: var(--line); }
 .avatar, .topbar-avatar { background: #eef0ff; color: #3b45b5; }
-.main-area { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.main-area { background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: clip; }
 .topbar { height: 56px; border-color: var(--line); padding-inline: 28px; }
 .environment { background: #f4f5f8; border-color: var(--line); color: #4b5160; }
 .shell { padding-top: 26px; }
@@ -319,7 +319,7 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .view-switch button { min-height: 34px; border: 0; background: transparent; color: #4b5160; padding: 6px 14px; border-radius: 8px; display: inline-flex; align-items: center; }
 .view-switch button[aria-pressed="true"] { background: #fff; color: var(--ink); box-shadow: 0 1px 3px #1f23301f; }
 
-.calendar-card { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; }
+.calendar-card { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: clip; }
 .calendar-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .calendar-head p { font-size: .8rem; margin-top: 3px; }
 .calendar-legend { display: flex; flex-wrap: wrap; gap: 14px; margin: 0; padding: 0; list-style: none; font-size: .78rem; color: #4b5160; }
@@ -328,10 +328,10 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .legend-dot { width: 10px; height: 10px; border-radius: 3px; border: 1px solid; }
 .calendar-body { display: grid; grid-template-columns: minmax(0, 1fr); }
 .calendar-body.with-detail { grid-template-columns: minmax(0, 1fr) 320px; }
-.calendar-scroll { overflow: auto; max-height: 72vh; }
-.calendar-grid { display: grid; grid-template-columns: 56px repeat(7, minmax(168px, 1fr)); grid-template-rows: auto calc(var(--hours) * var(--hour)); min-width: 1232px; }
+.calendar-scroll { min-width: 0; }
+.calendar-grid { display: grid; grid-template-columns: 52px repeat(7, minmax(0, 1fr)); grid-template-rows: auto calc(var(--hours) * var(--hour)); }
 .cal-corner, .cal-day-head { position: sticky; top: 0; z-index: 3; background: #fff; border-bottom: 1px solid var(--line); }
-.cal-day-head { display: grid; justify-items: center; padding: 10px 4px; border-left: 1px solid var(--line); font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.cal-day-head { display: grid; justify-items: center; padding: 10px 2px; min-width: 0; border-left: 1px solid var(--line); font-size: .74rem; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
 .cal-day-head strong { font-size: .9rem; color: var(--ink); letter-spacing: 0; font-variant-numeric: tabular-nums; }
 .cal-times { position: relative; }
 .cal-times span { position: absolute; right: 10px; transform: translateY(-50%); font-size: .72rem; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -344,9 +344,13 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .cal-event + .cal-event { box-shadow: -2px 0 0 #fff; }
 .cal-event.selected { box-shadow: 0 0 0 2px #1f2330; z-index: 20 !important; }
 .cal-event.compact .ev-time, .cal-event.compact .ev-meta { display: none; }
-.cal-event.compact .ev-title { font-size: .7rem; }
+.cal-event.compact { padding: 4px 3px 4px 4px; }
+.cal-event.compact .ev-title { font-size: .68rem; text-overflow: clip; display: flex; flex-direction: column; line-height: 1.25; }
+.cal-event.compact .ev-title > span { font-weight: 500; white-space: nowrap; overflow: hidden; }
+.cal-event.compact .ev-flag { top: auto; bottom: 4px; right: 3px; }
 .ev-time { font-size: .66rem; opacity: .85; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-.ev-title { font-weight: 650; overflow-wrap: anywhere; max-width: 100%; }
+.ev-title { font-weight: 650; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-title b { font-weight: 700; }
 .ev-meta { opacity: .85; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 .ev-flag { position: absolute; top: 4px; right: 5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px; background: var(--att-ink); color: #fff; font-size: .65rem; font-weight: 700; display: grid; place-items: center; }
 .tone-ready { background: var(--ready-bg); border-color: var(--ready-bd); color: var(--ready-ink); }
@@ -354,7 +358,7 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .tone-online { background: var(--online-bg); border-color: var(--online-bd); color: var(--online-ink); }
 .tone-proposal { background: var(--prop-bg); border-color: var(--prop-bd); color: var(--prop-ink); }
 .tone-pending { background: var(--pend-bg); border-color: var(--pend-bd); color: var(--pend-ink); }
-.calendar-detail { border-left: 1px solid var(--line); padding: 18px; display: grid; align-content: start; gap: 12px; max-height: 72vh; overflow: auto; }
+.calendar-detail { border-left: 1px solid var(--line); padding: 18px; display: grid; align-content: start; gap: 12px; position: sticky; top: 0; align-self: start; max-height: 100vh; overflow: auto; }
 .detail-top { display: flex; align-items: center; justify-content: space-between; }
 .detail-tone { padding: 2px 9px; border-radius: 99px; font-size: .72rem; font-weight: 600; border: 1px solid; }
 .detail-close { min-height: 30px; padding: 0 8px; font-size: 1.2rem; line-height: 1; }
@@ -370,5 +374,6 @@ td.proposal select, td.proposal .coach-picker > summary { border-color: var(--pr
 .detail-issues .icon { width: 15px; height: 15px; }
 .detail-issues ul { margin: 6px 0 0; padding-left: 18px; }
 .calendar-detail > button.primary { justify-self: stretch; }
+@media (max-width: 760px) { .calendar-scroll { overflow-x: auto; } .calendar-grid { min-width: 720px; } }
 @media (max-width: 1100px) { .calendar-body.with-detail { grid-template-columns: minmax(0, 1fr); } .calendar-detail { border-left: 0; border-top: 1px solid var(--line); max-height: none; } }
 @media (max-width: 900px) { .app-layout { padding: 0; gap: 0; } .app-sidebar { border-radius: 0; height: auto; } .main-area { border-radius: 0; border: 0; } }

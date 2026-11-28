@@ -133,6 +133,7 @@ export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: 
               return <button key={block.key} type="button" disabled={busy}
                 className={"cal-event tone-" + block.tone + (block.columns >= 3 ? " compact" : "") + (selected === block.key ? " selected" : "")}
                 aria-pressed={selected === block.key}
+                title={`${row.class_name} ${row.session} · ${row.start}–${row.end} · ${row.format === "online" ? "Online" : roomList.join(", ") || "Chưa có phòng"} · ${TONE_LABEL[block.tone]}`}
                 aria-label={`${row.class_name} ${row.session}, ${row.start}–${row.end}, ${TONE_LABEL[block.tone]}`}
                 style={{
                   top: ((block.start - startHour * 60) / 60) * HOUR + 2,
@@ -144,7 +145,7 @@ export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: 
                 }}
                 onClick={() => setSelected(selected === block.key ? undefined : block.key)}>
                 <span className="ev-time">{row.start}–{row.end}</span>
-                <span className="ev-title">{row.class_name} {row.session}</span>
+                <span className="ev-title"><b>{row.class_name}</b> <span>{row.session}</span></span>
                 <span className="ev-meta">{row.format === "online" ? "Online" : roomList.length > 1 ? roomList.length + " phòng" : roomList[0] || "Chưa có phòng"}</span>
                 {block.issues.length > 0 && !pending && <span className="ev-flag" aria-hidden="true">{block.issues.length}</span>}
               </button>;
