@@ -195,4 +195,6 @@ Ba công cụ dưới đây đã được triển khai trong [codebase/tools.py]
 
 | Thời điểm | Đổi gì | Vì sao |
 |---|---|---|
-|  |  |  |
+| 28/11 chiều | Lưới lịch tuần: thẻ vuông có dải giờ, trục giờ theo dữ liệu (09:00–20:00), cuộn trong khung, nút chuyển tuần | Góp ý giao diện của nhóm; không đổi logic, API hay kết quả eval |
+| 28/11 chiều | Gọi lại model **1 lần** khi phản hồi sai JSON hoặc thiếu trường (`ask_json` trong `agent.py`, test `tests/test_json_retry.py`) | Lỗi JSON ở B16 lượt 2 và 9/50 phiên mô phỏng (`cost/cost-estimate.md`). Chưa chạy lại eval/simulate; kết quả các lượt đã chạy giữ nguyên |
+| 28/11 chiều | Bỏ `evidence/data-mining.md` (template trống), điền "không dùng / không làm" ở `docs/ai-usage.md`, `evidence/summary.md`; cập nhật ghi chú video | Dọn tài liệu theo review; nhóm không đào data |

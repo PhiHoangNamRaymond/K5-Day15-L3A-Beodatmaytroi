@@ -6,7 +6,7 @@
 - **Thành viên và phân công:** [TEAMS.md](TEAMS.md).
 - **Canvas:** [canvas.md](canvas.md).
 
-- **Video demo CP3:** [Xem trên Google Drive](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing). Người dùng xác nhận đã quay; chưa kiểm tra quyền xem ẩn danh.
+- **Video demo CP3:** [Xem trên Google Drive](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing). Đã kiểm 28/11: link mở được không cần đăng nhập. Video quay giao diện bảng trước khi đổi sang lưới lịch tuần.
 
 ## Chạy bản tích hợp hai workbook và DeepSeek
 
@@ -164,7 +164,7 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 | `TEAMS.md` | 1.0 | CP1 · **đúng format**, BTC quét khi chấm |
 | `canvas.md` | 1.4 | CP1, cập nhật CP2 |
 | `evidence/hypothesis.md` | 1.1 | trước khi tìm bằng chứng |
-| `evidence/data-mining.md` · `evidence/interviews/TEMPLATE.md` → `P1.md`… · `evidence/survey/TEMPLATE.md` | 1.2 | bắt đầu sau Zoom, xong CP3 |
+| `evidence/interviews/TEMPLATE.md` → `P1.md`… · `evidence/survey/` (nhóm không đào data nên đã bỏ `data-mining.md`) | 1.2 | bắt đầu sau Zoom, xong CP3 |
 | `evidence/summary.md` | 1.2 | CP3 |
 | `spec.md` | §0–§2: 1.1–1.3 · §3–§5: 2.1–2.3 · §7: 2.4 · §8: 4.2 · §10: suốt | §7 chốt CP2 · §0–§7 CP3 · đủ CP4 |
 | `data/DATA_CARD.md` | 2.4 | bản đầu CP2 |
@@ -187,7 +187,7 @@ Nhóm sử dụng Codex để đọc yêu cầu hackathon, góp ý canvas và bi
 | 4 | Bản chạy thử làm trọn lát cắt | `codebase/` · lệnh ở mục "Lệnh" |
 | 5 | Định nghĩa "tốt" + bộ câu thử | `data/DATA_CARD.md` · `eval/` |
 | 6 | Mô phỏng chi phí khi dùng thật | `cost/` |
-| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · [Video demo CP3](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing) · chưa kiểm tra quyền xem ẩn danh |
+| 7 | Slide + demo + video dự phòng | `demo-slides.pdf` ở thư mục gốc · [Video demo CP3](https://drive.google.com/file/d/1WY1OBJLZzOJ7Rf78fS-3Q7z4ejvTWCR3/view?usp=sharing) · mở được không cần đăng nhập (kiểm 28/11) |
 | + | *Bonus:* người dùng thử | `validation/log.md` |
 
 ## Chạy website lịch tuần
