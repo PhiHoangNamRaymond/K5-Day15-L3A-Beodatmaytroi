@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Icon } from "./Icon";
 import { shortDate } from "../features/schedule/types";
 import type { Assignment, Changes, Review, Session } from "../features/schedule/types";
@@ -38,13 +39,14 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
         <details className="source">
           <summary>Xem nguồn</summary>
           <ul>
-            <li>Lịch mẫu / {row.id} · {row.published_room || "chưa có bản đã thông báo"}</li>
-            <li>{row.update_source || "Bảng phòng mẫu / " + row.id} · {row.room_options.join(", ") || "chưa có phòng xác nhận"}</li>
-            <li>Đăng ký giảng viên / {row.id} · {row.teachers.join(", ") || "chưa có"}</li>
-            <li>Đăng ký lab coach / {row.id} · {row.coaches.join(", ") || "chưa có"}</li>
-            {row.online_source && <li>Online · {row.online_source}</li>}
+            {row.sources?.map((source, index) => <li key={source.ref + index}><strong>{source.kind}</strong><br />{source.ref}<br />{source.value}</li>)}
+            {row.key_coaches.length > 0 && <li>Key coach: {row.key_coaches.join(", ")}</li>}
+            {row.extra_rooms.length > 0 && <li>Phòng phụ trong nguồn: {row.extra_rooms.join(", ")}; cần xác minh phân công phủ các phòng.</li>}
+
           </ul>
         </details>
+        {row.data_warnings.length > 0 && <details className="resolution"><summary>Xác minh nguồn ({row.data_warnings.length})</summary>{row.data_warnings.map(warning => <p key={warning}>{warning}</p>)}<label>Kết quả xác minh và nguồn<input aria-label={"Kết quả xác minh " + row.id} defaultValue={row.resolution_note} maxLength={1200} disabled={props.busy} placeholder="Ghi nguồn đã kiểm tra và kết luận (ít nhất 10 ký tự)" onBlur={e => { if (e.target.value !== row.resolution_note) props.onEdit(row.id, {resolution_note: e.target.value}); }} /></label></details>}
+        {row.format === "online" && <label className="meeting-field">Link học online<input type="url" aria-label={"Link online " + row.id} defaultValue={row.meeting_url} disabled={props.busy} placeholder="https://…" onBlur={e => {if (e.target.value !== row.meeting_url) props.onEdit(row.id, {meeting_url: e.target.value});}} /></label>}
         {suggestion && <div className="row-actions">
           <button className="secondary" disabled={props.busy} onClick={() => props.onApply(row.id)}>Áp dụng buổi này</button>
           <button className="secondary" disabled={props.busy} onClick={() => props.onSkip(row.id)}>Bỏ qua</button>
@@ -60,7 +62,7 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
               onChange={(event) => props.onEdit(row.id, { [field]: event.target.value })}>
               {hasSuggestion && <option value="__suggestion__" disabled>{suggested} · Đề xuất</option>}
               <option value="">Chưa chọn</option>
-              {row[options].map((name) => <option key={name} value={name}>{name}</option>)}
+              {Array.from(new Set([...(value ? [value] : []), ...row[options]])).map((name) => <option key={name} value={name}>{name}</option>)}
             </select>
           )}
         </td>;
@@ -93,9 +95,14 @@ function SessionRow({ row, blockers, suggestion, edit, ...props }: Omit<Props, "
 
 export function ScheduleTable(props: Props) {
   const { review, proposal, changes, ...handlers } = props;
-  const rows = review?.rows ?? [];
+  const [search, setSearch] = useState("");
+  const [classFilter, setClassFilter] = useState("");
+  const allRows = review?.rows ?? [];
+  const rows = allRows.filter(row => (!classFilter || row.class_name === classFilter) && [row.id, row.topic, row.class_name, row.room, row.teacher, row.coach.join(" ")].join(" ").toLocaleLowerCase("vi").includes(search.toLocaleLowerCase("vi")));
+  const classes = [...new Set(allRows.map(row => row.class_name))].sort();
   return <section className="panel" aria-labelledby="schedule-heading">
-    <div className="panel-title"><div><h2 id="schedule-heading">Bản nháp lịch tuần</h2><p>Rà soát phòng, giảng viên và coach cho từng buổi học.</p></div><span className="panel-count">{rows.length} buổi học</span></div>
+    <div className="panel-title"><div><h2 id="schedule-heading">Bản nháp lịch tuần</h2><p>Rà soát phòng, giảng viên và coach cho từng buổi học.</p></div><span className="panel-count">{allRows.length} bản ghi</span></div>
+    <div className="table-filters"><label>Tìm buổi học<input type="search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Lớp, phòng, giảng viên hoặc chuyên đề" /></label><label>Lớp<select value={classFilter} onChange={e => setClassFilter(e.target.value)}><option value="">Tất cả lớp</option>{classes.map(name => <option key={name}>{name}</option>)}</select></label><span>{rows.length}/{allRows.length} bản ghi buổi/phòng</span></div>
     <div className="table-scroll" tabIndex={0} aria-label="Bảng lịch tuần">
       <table>
         <thead><tr><th scope="col">Ngày / Buổi học</th><th scope="col">Phòng</th>

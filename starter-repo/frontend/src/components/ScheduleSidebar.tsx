@@ -1,3 +1,4 @@
+import { RoomUpdateForm } from "./RoomUpdateForm";
 import { Icon } from "./Icon";
 import { shortDate } from "../features/schedule/types";
 import type { Review } from "../features/schedule/types";
@@ -5,6 +6,8 @@ import { useState } from "react";
 
 interface Props {
   view: "changes" | "review";
+  week: string;
+  onCreated: (id: string) => Promise<void>;
   review?: Review;
   update: string;
   busy: boolean;
@@ -15,7 +18,7 @@ interface Props {
   onSource: (id: string) => void;
 }
 
-export function ScheduleSidebar({ view, review, update, busy, pending, approved, onUpdate, onCopy, onSource }: Props) {
+export function ScheduleSidebar({ week, onCreated, view, review, update, busy, pending, approved, onUpdate, onCopy, onSource }: Props) {
   const [expanded, setExpanded] = useState(false);
   const impact = review?.impact;
   const issues = review?.issues ?? [];
@@ -23,7 +26,7 @@ export function ScheduleSidebar({ view, review, update, busy, pending, approved,
   const sourceRows = new Map(review?.rows.map((row) => [row.id, row]));
   if (view === "changes") return <section className="panel" aria-labelledby="update-heading">
       <div className="panel-title"><div><h2 id="update-heading">Thay đổi phòng học</h2><p>Chọn cập nhật để đối chiếu với lịch đã thông báo.</p></div><Icon name="building" /></div>
-      <div className="issues">
+      <div className="issues"><RoomUpdateForm key={week} week={week} review={review} busy={busy} onCreated={onCreated} />
         <label className="field"><span className="field-label">Nguồn cập nhật phòng</span>
           <select id="update" value={update} disabled={busy || !review?.updates.length}
             onChange={(event) => onUpdate(event.target.value)}>
@@ -33,12 +36,11 @@ export function ScheduleSidebar({ view, review, update, busy, pending, approved,
         </label>
         {!impact && !pending && <p>Chọn một sự kiện để xem buổi bị ảnh hưởng và nháp gửi BTC.</p>}
         {impact && !pending && <div id="impact">
-          <strong>{impact.old_room ? impact.class_name + " · " + impact.session : "Chưa xác định lớp cần báo lại"}</strong>
+          <strong>{impact.class_name + " / " + impact.session}</strong>
           <p>{shortDate(impact.date)} · {impact.start}–{impact.end}</p>
-          <p>{impact.old_room ? impact.old_room + " → " + (impact.room || "Chờ phòng thay thế") :
-            "Cần bản lịch đã thông báo để đối chiếu."}</p>
-          <small>Nguồn {impact.source}</small>
-          {impact.old_room && <button className="quiet" onClick={() => onSource(impact.session)}>Mở buổi trong lịch</button>}
+          <p>{(impact.old_room ?? impact.baseline_room ?? "Chưa có phòng") + " → " + (impact.room || "Chờ phòng thay thế")}</p>
+          <small>Nguồn {impact.source}</small><small>{impact.baseline_kind === "published" ? "Đối chiếu lịch đã ghi nhận thông báo" : "Đối chiếu lịch nguồn; chưa ghi nhận đã thông báo"}</small>
+          {impact.session && <button className="quiet" onClick={() => onSource(impact.session)}>Mở buổi trong lịch</button>}
         </div>}
         <div id="notice" hidden={!review?.notice || pending}>
           <h3><Icon name="document" />Nháp thông báo cho BTC</h3>

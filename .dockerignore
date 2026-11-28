@@ -9,3 +9,6 @@
 **/traces
 **/eval/run-*.csv
 **/cost/simulate-*
+
+**/.local
+data-btc
