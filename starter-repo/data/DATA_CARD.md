@@ -1,45 +1,33 @@
-# Data card — dữ liệu bản chạy thử dùng
+# Data card — dữ liệu lập lịch và cập nhật phòng
 
-> Điền ở guide bước 2.4 (bản đầu ở CP2, đủ ở CP3). Ôn lại: ngày 6 · lab ngày 6. Chấm ở rubric R4.
-> Một trang. Mỗi dataset một mục. Dữ liệu chạy thử (bài mẫu, thông báo mẫu, đoạn transcript…) để trong thư mục `data/` này.
-> Không commit nguyên tài liệu khoá, dữ liệu cá nhân thật hay nguyên file data BTC cấp — chỉ đoạn trích ngắn, bản viết lại, hoặc số đã tổng hợp.
+## Dataset 1 · teaching-schedule.xlsx
 
-## Dataset 1 · Bảng phân công giảng dạy (`teaching-schedule.xlsx`)
-
-| | |
+| Mục | Nội dung |
 |---|---|
-| Dùng để làm gì | Nguồn chuẩn (*source of truth*) cho công cụ tra cứu lịch lớp, phòng học, giảng viên, chuyên đề và cảnh báo trùng lịch; đối chiếu dựng các câu `data_that` trong `eval/benchmark.csv`. |
-| Từ đâu | Data BTC cấp (`data/training-ops/teaching-schedule.xlsx` trong repo đề — 7 sheet: `Khoá 9 (GĐ1)`, `Tong_hop`, `Canh_bao`, `Nhan_su`, `Dang_ky_chi_tiet`, `Lịch sử chỉnh sửa`, `Khoá 8 (GĐ2)`). |
-| Xử lý những bước gì | |
-| Số dòng / số đoạn | 108 buổi học hoạt động trên `Khoá 9 (GĐ1)` (50 LEC, 58 LAB/Hackathon trong 21 ngày học `15/04–08/05/2027`; tính tách lớp gộp là 111 buổi) · 204 dòng `Dang_ky_chi_tiet` (32 người) · 35 dòng `Tong_hop` · 46 dòng `Canh_bao` (11 trùng GV, 14 trùng Lab Coach, 21 đăng ký lặp) · 44 dòng `Lịch sử chỉnh sửa`. |
-| Phiên bản / ngày lấy | Bản xuất giả lập lúc `21:00 ngày 27/04/2027` (ô `D1` sheet `Khoá 9 (GĐ1)`). |
-| Nhãn | Data vận hành giả lập do BTC cấp (cấu trúc bảng tính thật, thực thể và ngày giả lập; không tính làm bằng chứng pain R1). |
-| Giới hạn | 20 buổi vẫn ở trạng thái phòng `chờ xác nhận`; 3 buổi trong `Tong_hop` có 0 giảng viên đăng ký (`20/04`, `21/04`, `23/04` Sáng); không có cột khu vực hay ca tối cho giảng viên; không có mã buổi định danh duy nhất nối sẵn sang file lab coach. |
+| Dùng để làm gì | Lịch lớp, phòng, giảng viên, đăng ký nhân sự và lịch sử sửa để lập/rà soát lịch tuần |
+| Từ đâu | File người dùng cung cấp; bản local tại data-btc/ ở gốc repo, không commit |
+| Xử lý | codebase/xlsx_reader.py đọc XML/cached values và ô gộp; codebase/excel_data.py chuẩn hóa ngày/giờ, lớp, buổi, phòng và tên; giữ nguồn sheet/ô |
+| Quy mô nhập | 129 bản ghi buổi/phòng; 108 nhóm buổi; 204 đăng ký nhân sự; 4 tuần, 2027-04-15–2027-05-08 |
+| Phiên bản | SHA-256 6618f114bdfd4c10d0c149fc45152c740eb80bc7a1d08768be147bae69934068 |
+| Nhãn | Giả lập do BTC cung cấp; không phải bằng chứng pain |
+| Giới hạn | Hai ô dạy song song giữ hai bản ghi; lớp online gộp giữ một bản ghi; số nhóm buổi không tự nhân theo số lớp trong ô gộp; phòng dự kiến không được coi là đã xác nhận |
 
-## Dataset 2 · Bảng vận hành & đổi ca đội Lab Coach (`lab-coach-schedule.xlsx`)
+Không dùng Canh_bao làm đáp án đầu vào của AI. Không trộn lịch Khoá 8 sang Khoá 9. Công thức chỉ đọc cached values, không tính lại workbook. Nếu chưa có xác nhận giờ riêng thì dùng khung giờ của buổi trong cùng sheet, không tự tạo giờ.
 
-| | |
+## Dataset 2 · lab-coach-schedule.xlsx
+
+| Mục | Nội dung |
 |---|---|
-| Dùng để làm gì | Nguồn cho công cụ kiểm tra định biên Lab Coach / Key Coach theo phòng, tải công việc (`Workload`), cờ trùng ca (`L!`), hàng đợi đổi buổi và kiểm tra độ lệch đồng bộ với bảng giảng dạy. |
-| Từ đâu | Data BTC cấp (`data/training-ops/lab-coach-schedule.xlsx` trong repo đề — 6 sheet: `Master Plan`, `Lịch lớp K9 (bản chép)`, `Lịch lab 1504-2404`, `Lịch lab 2604-0805`, `Đổi buổi (form)`, `Workload - Lab coach`). |
-| Xử lý những bước gì | |
-| Số dòng / số đoạn | 62 Lab Coach trên `Workload - Lab coach` (tải 0–10 ca; 2 cờ trùng `L!` ở `Lab Coach BH`, `Lab Coach BI`) · 279 lượt phân công coach-ca trên 2 sheet `Lịch lab` (98 `Rảnh`, 125 `Chưa bắt đầu`, 33 `Chưa cập nhật`, 18 `Đang thực hiện`, 4 `Chưa phân công`, 1 `Không phân công`) · 22 yêu cầu `Đổi buổi (form)` (8 chưa xử lý, 5 ghi `chưa cập nhật sheet`, 4 gửi khẩn ≤24h trước giờ học). |
-| Phiên bản / ngày lấy | Bản chụp vận hành Khoá 9; riêng `Lịch lớp K9 (bản chép)` chép ngày `12/04/2027` (ô `D1`). |
-| Nhãn | Data vận hành giả lập do BTC cấp (không tính làm bằng chứng pain R1). |
-| Giới hạn | Bản chép lịch lớp cũ hơn bảng giảng dạy 15 ngày (lệch 44 ô phòng, 12 ô giảng viên); 19 buổi ở `Lịch lab 2604-0805` lệch trạng thái phòng so với `Khoá 9 (GĐ1)`; 12 buổi có số coach ít hơn số phòng (vd `28/04 Chiều L3B LAB 10`: 4 coach / 6 phòng); 11/22 đơn đổi buổi ghi mục tiêu tự do (`buổi nào cũng được`, `nhờ BTC xếp giúp`); sheet đợt 1 (`1504-2404`) không có cột `Phòng` từng dòng như đợt 2. |
+| Dùng để làm gì | Nối phân công lab/key coach, đối chiếu bản chép lịch, đọc yêu cầu đổi ca và workload |
+| Từ đâu | File người dùng cung cấp; bản local tại data-btc/ ở gốc repo, không commit |
+| Xử lý | Điền giá trị ô gộp theo nguồn; nối ngày + lớp + loại/số buổi + sáng/chiều; chỉ lấy tên coach đúng nhãn; không gửi cột email sang model |
+| Quy mô | 282 dòng coach có nhãn hợp lệ, 62 người trong workload, 22 yêu cầu đổi ca |
+| Phiên bản | SHA-256 24ee52f50d0a3bc1b2b84b77f4e81c67d2976ee91135e339ecf4d6e760669795 |
+| Nhãn | Giả lập do BTC cung cấp; không phải bằng chứng pain |
+| Giới hạn | Phân công ở cấp nhóm buổi không chứng minh coach đứng ở phòng cụ thể; workload trống không chứng minh rảnh; form đã xử lý không chứng minh bảng lịch đã đồng bộ |
 
-## Dataset 3 · Bộ câu thử đánh giá (`eval/benchmark.csv`)
+## Dữ liệu ứng dụng tạo
 
-| | |
-|---|---|
-| Dùng để làm gì | Đánh giá tự động & bán tự động hành vi điều phối tách phòng vật lý, xếp lại nhân sự và soạn thông báo gấp cho Key Coach qua `python run.py eval` theo 8 metric trong `eval/metric_spec.yaml`. |
-| Từ đâu | 23/30 câu (`data_that`, 77%) rút từ các ca tách phòng, đổi lịch sát giờ và điểm lệch thực tế khi đối chiếu 2 file lịch BTC cấp + 7/30 câu (`tu_viet`, 23%) cho tình huống thiếu thông tin, dữ liệu không tồn tại, quyền riêng tư và tấn công vượt quyền / prompt injection. |
-| Xử lý những bước gì | Kiểm toán chéo 2 file để khớp đúng mã buổi, phòng, giảng viên, định biên coach và khung ngày `15/04–08/05/2027`; chia theo 3 nhóm (`12 thuong` · `13 kho` · `5 tu_choi`); kiểm tra hợp lệ bằng `python run.py check`. |
-| Số dòng / số đoạn | 30 câu thử (23 `data_that`, 7 `tu_viet`). |
-| Phiên bản / ngày lấy | Chốt ngày `27/11/2026` (trước mốc CP2). |
-| Nhãn | Kết hợp `data_that` (23 dòng từ bộ lịch giả lập BTC cấp) + `synthetic` / `tu_viet` (7 dòng viết tay theo kịch bản 4 lớp chỗ khó ở `spec.md` §5, không dùng LLM sinh ngẫu nhiên nên không có random seed; đã kiểm tay 7/7 dòng). |
-| Giới hạn | Chưa có câu `nguoi_dung` trích nguyên văn từ phỏng vấn người thật (sẽ bổ sung nếu có thêm log phỏng vấn trước CP3). |
+Bản nháp, cập nhật phòng do người nhập, bản duyệt, bản ghi đã thông báo và trace được lưu SQLite ở .local/schedule.sqlite3. Gắn fingerprint hai file nguồn để không áp bản nháp cũ vào workbook mới. Không có dữ liệu synthetic bổ sung được trình bày như dữ liệu nguồn; test dùng SQLite tạm và mock model riêng, không phải bằng chứng pain.
 
-## Bản web local · fixture lịch tuần
-
-`data/weekly-demo.json` gồm 7 buổi trong 2 tuần và 3 cập nhật mẫu: đổi phòng đã xác nhận, thu hồi chưa có phòng thay thế và cập nhật thiếu bản lịch đã thông báo. Bảng phòng xác nhận, bản đã thông báo và đăng ký theo buổi được viết tay cho demo. Dữ liệu trong fixture là giả lập, không dùng làm bằng chứng pain. Đường dẫn online dùng miền mẫu. Demo tách dữ liệu này khỏi hai file XLSX và bộ benchmark CP2.
+Lịch sử sửa ô không chứng minh thông báo đã gửi. Chỉ dùng bản đã được người dùng ghi nhận đã thông báo để đối chiếu lịch đã phát. Số liệu tự động trên đây có thể chạy lại qua tools.dataset(); nhóm chưa ghi nhận kiểm tay toàn bộ dữ liệu hoặc kết quả đo người dùng.

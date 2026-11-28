@@ -1,16 +1,18 @@
+import { AIAssistant, DataPanel } from "./components/WorkbookPanels";
 import { useEffect, useState } from "react";
 import { Icon } from "./components/Icon";
 import { ScheduleSidebar } from "./components/ScheduleSidebar";
 import { ScheduleTable } from "./components/ScheduleTable";
 import { scheduleApi } from "./features/schedule/api";
 import { shortDate } from "./features/schedule/types";
-import type { Assignment, Changes, Draft, Handoff, Review } from "./features/schedule/types";
+import type { Assignment, Changes, Draft, Handoff, Review, AIStatus, DatasetMetadata, SourceData } from "./features/schedule/types";
 
-type View = "schedule" | "changes" | "review";
+type View = "schedule" | "changes" | "review" | "data";
 const views: ReadonlyArray<[View, string]> = [
   ["schedule", "Lịch tuần"],
   ["changes", "Cập nhật phòng"],
   ["review", "Rà soát & bàn giao"],
+  ["data", "Dữ liệu & AI"],
 ];
 
 function withoutSuggestion(proposal: Changes, id: string) {
@@ -34,14 +36,17 @@ function download(handoff: Handoff) {
 
 export default function App() {
   const [weeks, setWeeks] = useState<string[]>([]);
-  const [mode, setMode] = useState("");
+  const [ai, setAI] = useState<AIStatus>();
+  const [metadata, setMetadata] = useState<DatasetMetadata>();
+  const [sourceData, setSourceData] = useState<SourceData>();
+  const [published, setPublished] = useState(false);
   const [draft, setDraft] = useState<Draft>({ week: "", update: "", changes: {} });
   const [review, setReview] = useState<Review>();
   const [proposal, setProposal] = useState<Changes>({});
   const [approved, setApproved] = useState<Handoff>();
   const [busy, setBusy] = useState(true);
   const [pending, setPending] = useState(true);
-  const [status, setStatus] = useState("Đang tải lịch mẫu…");
+  const [status, setStatus] = useState("Đang đọc lịch từ Excel…");
   const [view, setView] = useState<View>("schedule");
   const [sourceId, setSourceId] = useState<string>();
 
@@ -59,6 +64,7 @@ export default function App() {
   async function refresh(next: Draft, message: string) {
     setDraft(next);
     setApproved(undefined);
+    setPublished(false);
     setPending(true);
     setReview(await scheduleApi.review(next));
     setPending(false);
@@ -66,15 +72,25 @@ export default function App() {
   }
 
   async function load(week: string) {
-    setReview(undefined);
-    setProposal({});
-    await refresh({ week, update: "", changes: {} }, "Chọn Tạo đề xuất lịch hoặc sửa từng buổi.");
+    setReview(undefined); setProposal({});
+    const saved = await scheduleApi.savedDraft(week);
+    const next = saved.draft ?? {week, update: "", changes: {}};
+    await refresh(next, saved.draft ? "Đã khôi phục bản nháp đã lưu cho tuần này." : "Đã đọc lịch từ hai workbook. Chọn Tạo đề xuất lịch để bắt đầu.");
+  }
+
+  async function reloadSources() {
+    await scheduleApi.reload();
+    const info = await scheduleApi.weeks();
+    setWeeks(info.weeks); setAI(info.ai); setMetadata(info.dataset);
+    setSourceData(await scheduleApi.data());
+    if (info.weeks.length) await load(info.weeks.includes(draft.week) ? draft.week : info.weeks[0]);
   }
 
   useEffect(() => {
     void run(async () => {
       const metadata = await scheduleApi.weeks();
-      setMode(metadata.mode);
+      setAI(metadata.ai); setMetadata(metadata.dataset);
+      setSourceData(await scheduleApi.data());
       setWeeks(metadata.weeks);
       if (metadata.weeks.length) await load(metadata.weeks[0]);
       else setStatus("Chưa có tuần để lập lịch.");
@@ -135,7 +151,8 @@ export default function App() {
     setPending(false);
     setProposal(changes);
     setApproved(undefined);
-    if (!result.proposal) setStatus("Không tìm được phương án không trùng. Kiểm tra lại đăng ký và phòng.");
+    if (result.ai_error) setStatus("Đã tạo đề xuất theo quy tắc. AI chưa hoàn tất: " + result.ai_error);
+    else if (!result.proposal) setStatus("Không tìm được phương án không trùng. Kiểm tra lại đăng ký và phòng.");
     else if (!Object.keys(changes).length) setStatus("Đề xuất trùng với bản nháp hiện tại.");
     else setStatus(result.method === "model" ? "Model đã chọn phương án. Kiểm tra nguồn trước khi áp dụng." :
       "Đã tạo đề xuất theo quy tắc. Kiểm tra nguồn trước khi áp dụng.");
@@ -155,10 +172,10 @@ export default function App() {
   return <div className="app-layout">
     <aside className="app-sidebar">
       <a className="sidebar-brand" href="#main-content" aria-label="Bèo dạt mây trôi — đến nội dung chính"><span className="brand-symbol"><Icon name="building" /></span><span>Bèo dạt mây trôi<small>Điều phối học vụ</small></span></a>
-      <div className="sidebar-course"><span className="course-symbol">K5</span><div><strong>AI20K · Khóa 5</strong><small>Không gian điều phối</small></div></div>
+      <div className="sidebar-course"><span className="course-symbol">K5</span><div><strong>{metadata?.course || "AI20K"}</strong><small>Không gian điều phối</small></div></div>
       <nav className="sidebar-nav" aria-label="Các bước lập lịch">
         {views.map(([id, label]) => <button key={id} type="button" aria-current={view === id ? "page" : undefined} onClick={() => setView(id)}>
-          <Icon name={id === "schedule" ? "calendar" : id === "changes" ? "building" : "check"} /><span>{label}</span>
+          <Icon name={id === "schedule" ? "calendar" : id === "changes" ? "building" : id === "data" ? "document" : "check"} /><span>{label}</span>
           {id === "review" && !pending && !!needsAttention && <span className="nav-count">{needsAttention}</span>}
         </button>)}
       </nav>
@@ -167,11 +184,11 @@ export default function App() {
     </aside>
     <div className="main-area">
     <header className="topbar"><div className="breadcrumb"><span>Điều phối học vụ</span><span aria-hidden="true">/</span><strong>{views.find(([id]) => id === view)?.[1]}</strong></div>
-      <div className="topbar-right"><span id="mode" className="environment">{mode && mode !== "fake" ? "Có kết nối model" : "Phiên trải nghiệm"}</span><span className="topbar-avatar" aria-label="Key coach">KC</span></div>
+      <div className="topbar-right"><span id="mode" className="environment">{ai?.ready ? "DeepSeek đã cấu hình" : "DeepSeek chưa có key"}</span><span className="topbar-avatar" aria-label="Key coach">KC</span></div>
     </header>
     <main className="shell" id="main-content">
       <section className="intro">
-        <div><h1>{view === "schedule" ? "Lịch giảng dạy" : view === "changes" ? "Cập nhật phòng học" : "Rà soát & bàn giao"}</h1><p>{view === "schedule" ? "Một tuần học, mọi phân công ở đúng chỗ." : view === "changes" ? "Đối chiếu thay đổi phòng và chuẩn bị thông báo cho lớp." : "Xử lý các điểm cần xác minh trước khi duyệt lịch."}</p></div>
+        <div><h1>{view === "schedule" ? "Lịch giảng dạy" : view === "changes" ? "Cập nhật phòng học" : view === "data" ? "Dữ liệu & AI" : "Rà soát & bàn giao"}</h1><p>{view === "schedule" ? "Một tuần học, mọi phân công ở đúng chỗ." : view === "changes" ? "Đối chiếu thay đổi phòng và chuẩn bị thông báo cho lớp." : view === "data" ? "Nguồn Excel, yêu cầu đổi ca và kết nối DeepSeek." : "Xử lý các điểm cần xác minh trước khi duyệt lịch."}</p></div>
         <label className="week-control">Tuần bắt đầu
           <span className="week-select"><Icon name="calendar" /><select id="week" value={draft.week} disabled={busy || !weeks.length}
             onChange={(event) => void run(() => load(event.target.value))}>
@@ -185,7 +202,7 @@ export default function App() {
         <div><span className="stat-icon ready"><Icon name="check" /></span><span className="stat-copy"><strong>{pending ? "–" : rowCount - needsAttention}</strong><span>Buổi đủ căn cứ</span></span></div>
         <div className={needsAttention && !pending ? "progress-warning" : ""}><span className="stat-icon warning"><Icon name="alert" /></span><span className="stat-copy"><strong>{pending ? "–" : needsAttention}</strong><span>Buổi cần xác minh</span></span></div>
       </div>
-      <div className="actions" hidden={view === "changes"}>
+      <div className="actions" hidden={view === "changes" || view === "data"}>
         {view === "schedule" ? <>
         <button id="propose" className={proposalIds.length || approved ? "secondary" : "primary"}
           disabled={busy || pending || !review} onClick={() => void run(propose)}><Icon name="spark" />{busy ? "Đang xử lý…" : "Tạo đề xuất lịch"}</button>
@@ -195,16 +212,17 @@ export default function App() {
           onClick={() => { setProposal({}); setStatus("Đã bỏ các đề xuất chưa áp dụng."); }}>Bỏ đề xuất còn lại</button>
         <button id="retry" className="secondary" hidden={!pending || !draft.week} disabled={busy}
           onClick={() => void run(() => refresh(draft, "Đã rà lại bản nháp."))}>Rà lại bản nháp</button>
-        <button id="reset" className="quiet" disabled={busy || !draft.week} onClick={() => void run(() => load(draft.week))}>Đặt lại</button>
+        <button id="reset" className="quiet" disabled={busy || !draft.week} onClick={() => void run(async () => { await scheduleApi.reset(draft.week); await load(draft.week); })}>Đặt lại</button>
         </> : <>
         <button id="approve" className={canApprove ? "primary" : "secondary"} hidden={!!approved}
           disabled={!canApprove} onClick={() => void run(async () => {
           setApproved(await scheduleApi.approve(draft));
           setProposal({});
-          setStatus("Đã duyệt bản bàn giao trong phiên này.");
+          setStatus("Đã lưu bản bàn giao đã duyệt. Chưa gửi thông báo ra ngoài.");
         })}>Duyệt bản bàn giao</button>
         <button id="export" className="primary" hidden={!approved} disabled={busy || !approved}
           onClick={() => approved && download(approved)}>Tải bản bàn giao</button>
+        {approved && <button className="secondary" disabled={busy || published} onClick={() => void run(async () => {await scheduleApi.publish(draft.week, approved.approved_at); setPublished(true); setStatus("Đã ghi nhận lịch đã thông báo theo xác nhận của bạn; hệ thống không tự gửi.");})}>{published ? "Đã ghi nhận thông báo" : "Ghi nhận đã thông báo"}</button>}
         </>}
       </div>
       </section>
@@ -212,14 +230,16 @@ export default function App() {
       <div className={view === "schedule" ? "workspace" : "workspace focused-view"} aria-busy={busy}>
         {view === "schedule" && <ScheduleTable review={review} proposal={proposal} changes={draft.changes} busy={busy} pending={pending}
           onEdit={edit} onApply={(id) => apply([id])} onSkip={(id) => setProposal(withoutSuggestion(proposal, id))} />}
-        {view !== "schedule" && <ScheduleSidebar view={view} review={review} update={draft.update} busy={busy} pending={pending} approved={!!approved}
+        {(view === "changes" || view === "review") && <ScheduleSidebar key={draft.week} week={draft.week} onCreated={async (id) => { setProposal({}); await run(() => refresh({...draft, update: id}, "Đã lưu cập nhật phòng và kiểm tra lại lịch.")); }} view={view} review={review} update={draft.update} busy={busy} pending={pending} approved={!!approved}
           onSource={(id) => { setSourceId(id); setView("schedule"); }}
           onUpdate={selectUpdate} onCopy={() => void run(async () => {
             if (!review?.notice) return;
             await navigator.clipboard.writeText(review.notice);
             setStatus("Đã sao chép nháp thông báo.");
           })} />}
+        {view === "data" && <DataPanel metadata={metadata} ai={ai} data={sourceData} busy={busy} onReload={() => void run(reloadSources)} />}
       </div>
+      {view === "schedule" && <><div className="proposal-explanation" hidden={!review?.explanation}><strong>{review?.method === "model" ? "DeepSeek giải thích đề xuất" : "Giải thích phương án quy tắc"}</strong><p>{review?.explanation}</p>{review?.questions.map(q => <p key={q}>{q}</p>)}{review?.usage && <small>{review.usage.model}: {review.usage.tokens_in} token vào / {review.usage.tokens_out} token ra</small>}</div><AIAssistant key={draft.week} draft={draft} ai={ai} busy={busy} /></>}
       <footer className="page-footer"><span>Lịch chỉ được bàn giao sau khi bạn duyệt.</span><span>Bèo dạt mây trôi</span></footer>
     </main>
     </div>

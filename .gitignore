@@ -37,3 +37,9 @@ data-btc
 data-btc/
 
 /data/preclass/*.csv
+
+/data-btc/
+
+/starter-repo/.local/
+
+/data/training-ops/*.xlsx

@@ -6,6 +6,10 @@
 - **Thành viên và phân công:** [TEAMS.md](TEAMS.md).
 - **Canvas:** [canvas.md](canvas.md).
 
+## Chạy bản tích hợp hai workbook và DeepSeek
+
+Xem [hướng dẫn chạy và cấu hình hiện tại](docs/RUNNING.md). Nguồn local nằm ở `data-btc/` tại gốc repo; ứng dụng đọc lịch, nhân sự, phân công coach và yêu cầu đổi ca từ hai workbook, lưu bản nháp bằng SQLite. Phần giao diện và API hiện tại đã chuyển khỏi fixture `weekly-demo.json`.
+
 ## Bài toán
 
 Khi chuẩn bị lịch giảng dạy cho tuần sau, key coach phải tổng hợp đăng ký nhân sự và tình trạng phòng đang chờ nhà trường duyệt, sau đó cập nhật lịch nếu phòng bị thu hồi hoặc thay đổi sau khi đã thông báo. Việc đối chiếu thủ công giữa các nguồn làm mất thời gian và có nguy cơ bỏ sót lớp bị ảnh hưởng hoặc thông báo sai địa điểm.

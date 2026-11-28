@@ -1,105 +1,187 @@
-﻿"""Đọc và kiểm ràng buộc cho lịch tuần giả lập."""
+"""Workbook-backed tools. No automatic writes to source workbooks or notifications."""
+import copy
+import hashlib
 import json
+import os
+import re
 from itertools import combinations
 from pathlib import Path
 
+from excel_data import ROOM, import_workbooks, monday, people
+import store
 from tracing import tool
 
-DATA = Path(__file__).resolve().parents[1] / "data" / "weekly-demo.json"
-FIELDS = ("room", "teacher", "coach", "format")
+ROOT = Path(__file__).resolve().parents[1]
+_cache = None
+_signatures = None
+
+
+def source_paths():
+    folder = Path(os.environ.get('SCHEDULE_SOURCE_DIR', ROOT.parent / 'data-btc'))
+    return (Path(os.environ.get('TEACHING_FILE', folder / 'teaching-schedule.xlsx')),
+            Path(os.environ.get('COACH_FILE', folder / 'lab-coach-schedule.xlsx')))
+
+
+def dataset(force=False):
+    global _cache, _signatures
+    paths = source_paths()
+    if not all(path.is_file() for path in paths):
+        raise ValueError('Thiếu hai file Excel. Đặt teaching-schedule.xlsx và lab-coach-schedule.xlsx trong data-btc ở gốc repo hoặc cấu hình TEACHING_FILE/COACH_FILE.')
+    signatures = tuple((str(p), p.stat().st_mtime_ns, p.stat().st_size) for p in paths)
+    if force or _cache is None or signatures != _signatures:
+        new = import_workbooks(*paths)
+        new['metadata']['fingerprint'] = hashlib.sha256(''.join(f['sha256'] for f in new['metadata']['files']).encode()).hexdigest()[:20]
+        _cache, _signatures = new, signatures
+    return _cache
+
+
+def weeks():
+    return dataset()['weeks']
+
+
+def fingerprint():
+    return dataset()['metadata']['fingerprint']
+
+
+def additional_updates(week):
+    return store.get('updates', store.draft_key(week, fingerprint()), [])
+
+
+@tool
+def read_weekly_schedule_data(week_id: str) -> dict:
+    """Đọc tuần. Input: thứ Hai ISO. Output: lịch và nguồn Excel, cập nhật do người nhập. Chỉ đọc."""
+    original = weeks().get(week_id)
+    if original is None:
+        raise ValueError('Tuần này không có trong hai workbook đã nhập.')
+    week = copy.deepcopy(original)
+    week['updates'] = additional_updates(week_id)
+    published = store.get('published', store.draft_key(week_id, fingerprint()))
+    if published:
+        for row in week['rows']:
+            baseline = next((item for item in published['rows'] if item['id'] == row['id']), None)
+            if baseline:
+                row['published_room'] = baseline['room']
+    for update in week['updates']:
+        row = next((r for r in week['rows'] if r['id'] == update['session']), None)
+        if row:
+            row.update(room=update['room'], room_options=[update['room']] if update['room'] and update['confirmed'] else [],
+                       room_status='confirmed' if update['room'] and update['confirmed'] else 'pending', update_source=update['source'])
+            row['sources'].append({'kind': 'Cập nhật người dùng', 'ref': update['source'], 'value': update['room'] or 'Thu hồi phòng'})
+    return week
+
+
+def create_update(body):
+    week_id = body.get('week')
+    week = read_weekly_schedule_data(week_id)
+    row = next((r for r in week['rows'] if r['id'] == body.get('session')), None)
+    if row is None:
+        raise ValueError('Chọn một buổi trong tuần hiện tại.')
+    room = body.get('room', '').strip().upper()
+    source = body.get('source', '').strip()
+    confirmed = body.get('confirmed', False)
+    if not isinstance(confirmed, bool) or not 8 <= len(source) <= 300:
+        raise ValueError('Ghi nguồn xác nhận/cập nhật từ 8 đến 300 ký tự.')
+    if room and (not ROOM.findall(room) or re.sub(r'[\s,;]', '', ROOM.sub('', room))):
+        raise ValueError('Phòng dùng mã như H209 hoặc C401, E403; để trống nếu bị thu hồi.')
+    room = ', '.join(dict.fromkeys(ROOM.findall(room)))
+    items = additional_updates(week_id)
+    if len(items) >= 100:
+        raise ValueError('Tuần đã có 100 cập nhật; kiểm tra lại nguồn trước khi bổ sung.')
+    item = {'id': 'UP-' + store.stamp().replace(':', '').replace('.', ''), 'session': row['id'],
+            'room': room, 'source': source, 'confirmed': confirmed,
+            'previous_room': row['room'],
+            'label': row['class_name'] + ' / ' + row['date'] + ' / ' + (room or 'Thu hồi phòng'),
+            'created_at': store.stamp()}
+    store.put('updates', store.draft_key(week_id, fingerprint()), items + [item])
+    return item
+
+
+@tool
+def diff_room_updates(rows: list, updates: list, update_id: str) -> dict:
+    """Đối chiếu cập nhật. Input: lịch, mã cập nhật. Output: lớp bị ảnh hưởng, phòng và nguồn. Chỉ đọc."""
+    update = next((item for item in updates if item['id'] == update_id), None)
+    if update is None:
+        raise ValueError('Cập nhật không thuộc tuần hoặc phiên bản dữ liệu hiện tại.')
+    row = next(item for item in rows if item['id'] == update['session'])
+    return dict(update, old_room=row.get('published_room'), baseline_room=update.get('previous_room', row['room']),
+                baseline_kind='published' if row.get('published_room') is not None else 'source',
+                class_name=row['class_name'], date=row['date'], start=row['start'], end=row['end'])
 
 
 def coach_list(value):
     if isinstance(value, str):
         value = [value] if value.strip() else []
-    if not isinstance(value, list) or any(
-        not isinstance(name, str) or not name.strip() or len(name) > 80 for name in value
-    ):
-        raise ValueError("Lab coach phải là danh sách tên hợp lệ.")
-    return list(dict.fromkeys(name.strip() for name in value))
-
-
-def weeks():
-    return json.loads(DATA.read_text(encoding="utf-8-sig"))
-
-
-@tool
-def read_weekly_schedule_data(week_id: str) -> dict:
-    """Đọc nguồn của tuần. Input: ngày thứ Hai ISO. Output: buổi học và cập nhật phòng. Chỉ đọc."""
-    week = weeks().get(week_id)
-    if week is None:
-        raise ValueError("Tuần này chưa có dữ liệu mẫu.")
-    return week
-
-
-@tool
-def diff_room_updates(rows: list, updates: list, update_id: str) -> dict:
-    """Đối chiếu cập nhật. Input: lịch, bản cập nhật, mã chọn. Output: lớp, phòng cũ/mới và nguồn. Chỉ đọc."""
-    update = next((item for item in updates if item["id"] == update_id), None)
-    if update is None:
-        raise ValueError("Cập nhật phòng không thuộc tuần đã chọn.")
-    row = next(item for item in rows if item["id"] == update["session"])
-    return dict(update, old_room=row.get("published_room"), class_name=row["class_name"],
-                date=row["date"], start=row["start"], end=row["end"])
+    if not isinstance(value, list) or len(value) > 80 or any(not isinstance(n, str) or not n.strip() or len(n) > 100 for n in value):
+        raise ValueError('Lab coach phải là danh sách tên hợp lệ.')
+    return list(dict.fromkeys(n.strip() for n in value))
 
 
 def draft_rows(week, changes, update):
-    if not isinstance(changes, dict) or changes.keys() - {row["id"] for row in week["rows"]}:
-        raise ValueError("Mã buổi không thuộc tuần đã chọn.")
-    rows = []
-    for source in week["rows"]:
-        row = dict(source, format="online" if source.get("online_source") else "offline")
-        if update and update["session"] == row["id"]:
-            row.update(room_options=[update["room"]] if update["room"] else [],
-                       room=update["room"], update_source=update["source"])
-            row["missing_published"] = not update["old_room"]
-        fields = changes.get(row["id"], {})
-        if not isinstance(fields, dict) or fields.keys() - set(FIELDS):
-            raise ValueError("Bản nháp chứa trường ngoài phạm vi chỉnh sửa.")
-        if any(not isinstance(value, str) or len(value) > 80
-               for key, value in fields.items() if key != "coach"):
-            raise ValueError("Giá trị chỉnh sửa phải là văn bản tối đa 80 ký tự.")
-        row.update({key: value.strip() for key, value in fields.items() if key != "coach"})
-        row["coach"] = coach_list(fields.get("coach", source["coach"]))
-        rows.append(row)
+    if not isinstance(changes, dict) or changes.keys() - {r['id'] for r in week['rows']}:
+        raise ValueError('Mã buổi không thuộc tuần đã chọn.')
+    rows = copy.deepcopy(week['rows'])
+    for row in rows:
+        if update and update['session'] == row['id']:
+            row.update(room=update['room'], room_options=[update['room']] if update['room'] and update['confirmed'] else [],
+                       room_status='confirmed' if update['room'] and update['confirmed'] else 'pending', update_source=update['source'])
+            row['sources'].append({'kind': 'Cập nhật người dùng', 'ref': update['source'], 'value': update['room'] or 'Thu hồi phòng'})
+        fields = changes.get(row['id'], {})
+        if not isinstance(fields, dict) or fields.keys() - {'room', 'teacher', 'coach', 'resolution_note', 'meeting_url'}:
+            raise ValueError('Bản nháp có trường ngoài phạm vi chỉnh sửa.')
+        for key, value in fields.items():
+            if key == 'coach':
+                row[key] = coach_list(value)
+            else:
+                if not isinstance(value, str) or len(value) > (1200 if key == 'resolution_note' else 500):
+                    raise ValueError('Giá trị chỉnh sửa không hợp lệ.')
+                row[key] = value.strip()
     return rows
+
+
+def overlaps(left, right):
+    return left['date'] == right['date'] and max(left['start'], right['start']) < min(left['end'], right['end'])
 
 
 @tool
 def validate_schedule_draft(rows: list) -> list:
-    """Kiểm lịch. Input: các dòng nháp và nguồn. Output: lỗi chặn, mã buổi và nguồn. Chỉ tính toán."""
+    """Kiểm ràng buộc. Input: bản nháp với nguồn. Output: lỗi chặn và cảnh báo. Chỉ tính toán."""
     issues = []
-
-    def add(row, field, message, other=None):
-        sessions = [row["id"]] if other is None else [row["id"], other["id"]]
-        issues.append({"sessions": sessions, "field": field, "message": message})
-
+    def add(row, field, message, other=None, severity='error'):
+        issues.append({'sessions': [row['id']] + ([other['id']] if other else []), 'field': field,
+                       'message': message, 'severity': severity, 'source': row.get('source', '')})
     for row in rows:
-        if row.get("missing_published"):
-            add(row, "published", "Bổ sung bản lịch đã thông báo để xác định lớp cần báo lại.")
-        if row["format"] == "online":
-            if not row.get("online_source"):
-                add(row, "format", "Chưa có nguồn xác nhận chuyển online và đường dẫn học.")
-            if row["room"]:
-                add(row, "room", "Buổi online vẫn có phòng vật lý.")
-        elif row["format"] != "offline" or row.get("online_source"):
-            add(row, "format", "Hình thức chưa khớp nguồn xác nhận.")
-        elif row["room"] not in row["room_options"]:
-            add(row, "room", "Chưa có phòng khớp nguồn xác nhận.")
-        if row["teacher"] not in row["teachers"]:
-            add(row, "teacher", "Chọn giảng viên có đăng ký đúng buổi.")
-        if not row["coach"] or not set(row["coach"]).issubset(row["coaches"]):
-            add(row, "coach", "Chọn lab coach có đăng ký đúng buổi.")
-
+        if row['format'] == 'online':
+            if row['room']:
+                add(row, 'room', 'Buổi online không dùng phòng vật lý.')
+            if not re.match(r'^https://[^\s]+$', row.get('meeting_url', '')):
+                add(row, 'meeting_url', 'Bổ sung đường dẫn học online HTTPS trước khi bàn giao.')
+        elif row['room'] not in row['room_options'] or not row['room']:
+            add(row, 'room', 'Phòng chưa được xác nhận hoặc không khớp nguồn; nhập cập nhật có căn cứ ở Cập nhật phòng.')
+        if row['teacher'] not in row['teachers'] or not row['teacher']:
+            add(row, 'teacher', 'Chọn giảng viên có căn cứ trong lịch hoặc đăng ký đúng buổi.')
+        if row['coach_required'] and not row['coach']:
+            add(row, 'coach', 'Buổi lab/hackathon chưa có coach được phân công.')
+        if not set(row['coach']).issubset(row['coaches']):
+            add(row, 'coach', 'Coach được chọn không có nguồn phân công/đăng ký đúng buổi.')
+        for warning in row.get('data_warnings', []):
+            if len(row.get('resolution_note', '')) < 10:
+                add(row, 'source', warning + ' Ghi kết quả xác minh trong buổi học trước khi duyệt.')
     for left, right in combinations(rows, 2):
-        if left["date"] != right["date"] or max(left["start"], right["start"]) >= min(left["end"], right["end"]):
+        if not overlaps(left, right):
             continue
-        overlap = f"{max(left['start'], right['start'])}–{min(left['end'], right['end'])}"
-        for field, name in (("room", "Phòng"), ("teacher", "Giảng viên")):
-            if field == "room" and (left["format"] != "offline" or right["format"] != "offline"):
-                continue
-            if left[field] and left[field] == right[field]:
-                add(left, field, f"{name} {left[field]} trùng ca {overlap}.", right)
-        for coach in sorted(set(left["coach"]).intersection(right["coach"])):
-            add(left, "coach", f"Lab coach {coach} trùng ca {overlap}.", right)
+        # A lecturer/coach can cover parallel rooms of the same class session.
+        same_group = left['group_id'] == right['group_id']
+        if left['format'] == right['format'] == 'offline':
+            left_rooms = set(ROOM.findall(left['room'])) | (set(left.get('extra_rooms', [])) if not same_group else set())
+            right_rooms = set(ROOM.findall(right['room'])) | (set(right.get('extra_rooms', [])) if not same_group else set())
+            shared = left_rooms & right_rooms
+            if shared:
+                add(left, 'room', 'Trùng phòng ' + ', '.join(sorted(shared)) + ' trong cùng thời gian.', right)
+        if not same_group:
+            shared_teachers = set(people(left['teacher'], 'Lecturer')) & set(people(right['teacher'], 'Lecturer'))
+            if shared_teachers:
+                add(left, 'teacher', 'Giảng viên trùng ca: ' + ', '.join(sorted(shared_teachers)), right)
+            shared_coaches = set(left['coach']) & set(right['coach'])
+            if shared_coaches:
+                add(left, 'coach', 'Lab coach trùng ca: ' + ', '.join(sorted(shared_coaches)), right)
     return issues

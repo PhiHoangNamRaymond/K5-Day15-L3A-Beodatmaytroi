@@ -17,3 +17,8 @@ README của nhóm có mục "Dùng AI vào việc gì" (2–3 dòng, bắt bu�
 | Slide, văn bản | | | | |
 
 **Không dùng AI để:** tạo người được phỏng vấn, trích dẫn, câu trả lời khảo sát; sửa kết quả các lượt đã chạy (`eval/run-*.csv`, `cost/simulate-*.csv`, `traces/`).
+
+
+## Tích hợp workbook và DeepSeek
+
+Codex hỗ trợ viết bộ đọc XLSX, nối dữ liệu hai workbook, kiểm ràng buộc, SQLite, API DeepSeek và UI nguồn/đổi phòng/trợ lý. Bộ test tự động dùng dữ liệu local và mock model; các lượt API thật được báo riêng, lấy token từ usage. Nhóm cần kiểm tra logic nguồn, quyền duyệt và phần việc có tên mình trước khi nộp.
