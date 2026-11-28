@@ -9,6 +9,8 @@ interface Props {
   proposal: Changes;
   pending: boolean;
   busy: boolean;
+  weeks?: string[];
+  onWeek?: (week: string) => void;
   onOpen: (id: string) => void;
 }
 
@@ -26,7 +28,7 @@ interface Block {
   columns: number;
 }
 
-const HOUR = 60; // px per hour
+const HOUR = 64; // px per hour
 const DAY_NAMES = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
 const TONE_LABEL: Record<Tone, string> = {
   ready: "Đủ căn cứ",
@@ -94,7 +96,7 @@ function buildBlocks(review: Review | undefined, proposal: Changes, pending: boo
   return blocks;
 }
 
-export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: Props) {
+export function WeekCalendar({ week, review, proposal, pending, busy, weeks = [], onWeek, onOpen }: Props) {
   const [selected, setSelected] = useState<string>();
   const blocks = useMemo(() => buildBlocks(review, proposal, pending), [review, proposal, pending]);
   const days = useMemo(() => Array.from({ length: 7 }, (_, index) => addDays(week, index)), [week]);
@@ -104,6 +106,7 @@ export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: 
   const endHour = Math.ceil(last / 60);
   const hours = Array.from({ length: endHour - startHour }, (_, index) => startHour + index);
   const active = blocks.find((block) => block.key === selected);
+  const weekIndex = weeks.indexOf(week);
   const counts = blocks.reduce<Record<Tone, number>>((acc, block) => ({ ...acc, [block.tone]: acc[block.tone] + 1 }),
     { ready: 0, attention: 0, online: 0, proposal: 0, pending: 0 });
 
@@ -121,7 +124,10 @@ export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: 
     <div className={active ? "calendar-body with-detail" : "calendar-body"}>
       <div className="calendar-scroll" tabIndex={0} aria-label="Lưới lịch tuần">
         <div className="calendar-grid" style={{ ["--hours" as string]: hours.length, ["--hour" as string]: HOUR + "px" }}>
-          <div className="cal-corner" />
+          <div className="cal-corner">
+            <button type="button" aria-label="Tuần trước" disabled={busy || weekIndex <= 0} onClick={() => onWeek?.(weeks[weekIndex - 1])}>←</button>
+            <button type="button" aria-label="Tuần sau" disabled={busy || weekIndex < 0 || weekIndex >= weeks.length - 1} onClick={() => onWeek?.(weeks[weekIndex + 1])}>→</button>
+          </div>
           {days.map((day, index) => <div key={day} className={"cal-day-head" + (index >= 5 ? " weekend" : "")}>
             <span>{DAY_NAMES[index]}</span><strong>{day.slice(8, 10)}/{day.slice(5, 7)}</strong>
           </div>)}
@@ -131,22 +137,23 @@ export function WeekCalendar({ week, review, proposal, pending, busy, onOpen }: 
               const row = block.rows[0];
               const roomList = rooms(block.rows);
               return <button key={block.key} type="button" disabled={busy}
-                className={"cal-event tone-" + block.tone + (block.columns >= 3 ? " compact" : "") + (selected === block.key ? " selected" : "")}
+                className={"cal-event tone-" + block.tone + (block.columns >= 2 ? " compact" : "") + (selected === block.key ? " selected" : "")}
                 aria-pressed={selected === block.key}
                 title={`${row.class_name} ${row.session} · ${row.start}–${row.end} · ${row.format === "online" ? "Online" : roomList.join(", ") || "Chưa có phòng"} · ${TONE_LABEL[block.tone]}`}
                 aria-label={`${row.class_name} ${row.session}, ${row.start}–${row.end}, ${TONE_LABEL[block.tone]}`}
                 style={{
-                  top: ((block.start - startHour * 60) / 60) * HOUR + 2,
-                  height: Math.max(((block.end - block.start) / 60) * HOUR - 4, 28),
-                  // Cascade like common calendars: later columns overlap earlier ones instead of shrinking to slivers.
-                  left: `calc(${(block.column / block.columns) * 100}% + 3px)`,
-                  width: `calc(${Math.min(100 / block.columns * (block.columns > 1 ? 1.7 : 1), 100 - (block.column / block.columns) * 100)}% - 6px)`,
-                  zIndex: block.column + 1,
+                  top: ((block.start - startHour * 60) / 60) * HOUR + 3,
+                  height: Math.max(((block.end - block.start) / 60) * HOUR - 6, 30),
+                  // Overlapping sessions share the day column side by side, each a separate square card.
+                  left: `calc(${(block.column / block.columns) * 100}% + ${block.column ? 2 : 4}px)`,
+                  width: `calc(${100 / block.columns}% - ${block.columns > 1 ? 4 : 8}px)`,
                 }}
                 onClick={() => setSelected(selected === block.key ? undefined : block.key)}>
-                <span className="ev-time">{row.start}–{row.end}</span>
-                <span className="ev-title"><b>{row.class_name}</b> <span>{row.session}</span></span>
-                <span className="ev-meta">{row.format === "online" ? "Online" : roomList.length > 1 ? roomList.length + " phòng" : roomList[0] || "Chưa có phòng"}</span>
+                <span className="ev-time" data-start={row.start}>{row.start} – {row.end}</span>
+                <span className="ev-body">
+                  <span className="ev-title"><b>{row.class_name}</b> <span>{row.session}</span></span>
+                  <span className="ev-meta">{row.format === "online" ? "Online" : roomList.length > 1 ? roomList.length + " phòng" : roomList[0] || "Chưa có phòng"}</span>
+                </span>
                 {block.issues.length > 0 && !pending && <span className="ev-flag" aria-hidden="true">{block.issues.length}</span>}
               </button>;
             })}

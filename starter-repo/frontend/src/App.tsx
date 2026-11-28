@@ -235,6 +235,7 @@ export default function App() {
           <button type="button" aria-pressed={layout === "list"} onClick={() => setLayout("list")}><Icon name="document" />Danh sách</button>
         </div>}
         {view === "schedule" && layout === "calendar" && draft.week && <WeekCalendar week={draft.week} review={review} proposal={proposal} pending={pending} busy={busy}
+          weeks={weeks} onWeek={(week) => void run(() => load(week))}
           onOpen={(id) => { setSourceId(id); setLayout("list"); }} />}
         {view === "schedule" && layout === "list" && <ScheduleTable review={review} proposal={proposal} changes={draft.changes} busy={busy} pending={pending}
           onEdit={edit} onApply={(id) => apply([id])} onSkip={(id) => setProposal(withoutSuggestion(proposal, id))} />}
