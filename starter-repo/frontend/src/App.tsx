@@ -184,7 +184,7 @@ export default function App() {
     </aside>
     <div className="main-area">
     <header className="topbar"><div className="breadcrumb"><span>Điều phối học vụ</span><span aria-hidden="true">/</span><strong>{views.find(([id]) => id === view)?.[1]}</strong></div>
-      <div className="topbar-right"><span id="mode" className="environment">{ai?.ready ? "DeepSeek đã cấu hình" : "DeepSeek chưa có key"}</span><span className="topbar-avatar" aria-label="Key coach">KC</span></div>
+      <div className="topbar-right"><span id="mode" className="environment">{ai?.ready ? "Model đã cấu hình" : "Model chưa có key"}</span><span className="topbar-avatar" aria-label="Key coach">KC</span></div>
     </header>
     <main className="shell" id="main-content">
       <section className="intro">
