@@ -15,7 +15,7 @@
 * **Việc cần hoàn thành (JTBD):** Phân công nhân sự (lecturer, lab coach) vào lớp học, sắp xếp lớp học vào phòng học vật lý phù hợp, đồng thời điều chỉnh và thông báo kịp thời cho các bên khi thiếu phòng hoặc lịch học thay đổi sát giờ.
 * **Công cụ hiện tại & điểm gãy:** Sử dụng các bảng Google Sheets rời rạc giữa BTC và đội lab coach, kết hợp biểu mẫu đổi buổi và nhắn tin thủ công qua nhóm Zalo; quy trình dễ quá tải khi thiếu phòng (buộc phải tách lớp thành nhiều phòng nhỏ) hoặc có thay đổi phòng học sát giờ.
 * **Pain point cốt lõi:** Key coach — khi phải tách lớp sang các phòng học vật lý nhỏ hơn và sắp xếp lại nhân sự lúc thiếu phòng hoặc lịch đổi đột xuất — bị vướng vì không có hệ thống quản lý phòng/lớp thống nhất, lịch nằm phân tán ở nhiều bảng phải dò tay và đợi nhiều bên duyệt — hậu quả là thời gian chuyển đổi và thông báo cho giảng viên, lab coach quá gấp, dễ thiếu coach theo từng phòng, sót nhân sự hoặc đến nhầm phòng.
-* **Bằng chứng khảo sát (chi tiết: `evidence/summary.md`):** Phỏng vấn **3/3** Key Coach & Lab Coach (ngoài nhóm) đều xác nhận không có công cụ quản lý chung cho quy trình này (tỷ lệ đồng thuận **100%**, tức **3/3** người gặp vướng mắc). Kết luận: giả thuyết về pain point là đúng.
+* **Trạng thái bằng chứng (chi tiết: `evidence/summary.md`):** Bản CP2 ghi nhận phỏng vấn 3 người, nhưng repo chưa có ghi chép gốc để xác minh vai trò, câu trả lời và trích dẫn. Chưa xác nhận đạt ngưỡng bằng chứng pain. Workbook giả lập không thay thế bằng chứng người dùng thật.
 
 ## §2. Impact và quyết định chọn *(guide 1.3)*
 
@@ -25,7 +25,7 @@
 | Lập lịch tuần và xử lý phòng đổi | 1 key coach | 4 lần lập, 2 lần cập nhật | 25 phút/lần lập, 10 phút/lần cập nhật | 120 phút | **Chọn.** Bao phủ cả hai luồng vận hành chính; có thể dựng và kiểm thử bằng dữ liệu giả lập cùng một bản lịch đã thông báo. |
 | Tối ưu lịch toàn khóa | 1 key coach | 1 lần | 45 phút | 45 phút | Loại. Phạm vi vượt quá chu kỳ một tuần và đòi hỏi dữ liệu khả dụng của nhân sự, phòng học qua nhiều tuần. |
 
-* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**.
+* **Công thức cho hướng được chọn:** 1 key coach × 4 tuần × 25 phút = **100 phút** lập lịch đầu tuần; cộng thêm 2 lần xử lý đổi phòng × 10 phút = **20 phút**, tổng cộng **120 phút/tháng**. Các số tần suất và thời gian trong bảng hiện là **tự ước tính**, chưa có ghi chép đo hoặc phỏng vấn để kiểm chứng.
 
 ## §3. Giải pháp tương tự *(guide 2.1)*
 

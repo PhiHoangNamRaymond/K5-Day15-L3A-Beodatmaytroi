@@ -1,5 +1,7 @@
 # Tổng hợp bằng chứng pain
 
+**Trạng thái kiểm tra CP3 ngày 28/11/2026:** Chưa đủ bằng chứng để xác nhận đạt ngưỡng. Repo chưa có P1/P2/P3 hoặc phiếu khảo sát đã điền. Thông tin “3 người đã phỏng vấn” trong bản spec cũ chưa đối chiếu được ghi chép gốc. Cần nhóm cung cấp vai trò, câu trả lời và ít nhất 5 trích dẫn có nguồn đã ẩn danh. Không dùng workbook giả lập BTC thay cho bằng chứng người dùng thật. Các ô trống dưới đây được giữ để bổ sung từ nguồn thật, không suy diễn hoặc điền số giả.
+
 > Điền ở guide bước 1.2, xong trước **CP3 10:00 Thứ Bảy 28/11**. Chấm ở rubric R1.
 > Ba nguồn ngang nhau — tối thiểu **≥1 nguồn đạt ngưỡng**. Mạnh nhất: đào data ra insight → hỏi người dùng để kiểm lại (hoặc ngược lại).
 

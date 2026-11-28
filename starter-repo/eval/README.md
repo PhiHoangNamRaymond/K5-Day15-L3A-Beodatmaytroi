@@ -34,7 +34,7 @@ Dataset nào, xử lý gì: tóm 2–3 dòng từ `data/DATA_CARD.md`.
 
 | Lượt | Run ID | Model | Cấu hình (prompt / công cụ / thay đổi) | Đạt / tổng | % | Đạt chuẩn? |
 |---|---|---|---|---|---|---|
-| 1 | | | | __/__ | | |
+| 1 | run-1@20261128-092000 | gpt-6-luna | Câu hỏi tự nhiên, ngữ cảnh workbook toàn khóa, kiểm xung đột bằng code; OpenAI max_completion_tokens=4096 | 11/30 | 37% | Chưa; chấm AI sơ bộ, cần người xác nhận |
 | 2 | | | | __/__ | | |
 
 Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, không sửa dòng cũ.
@@ -42,3 +42,7 @@ Lượt chạy lại vì lỗi kỹ thuật, lượt sau CP4: ghi thêm dòng, k
 ## 6. Lỗi chính
 
 Tóm 2–3 dòng từ `eval/report.md`: nhóm lỗi lớn nhất · đã sửa gì · còn lại gì.
+
+Lượt 1 đã gọi model thật; B22 lỗi phản hồi thiếu trường answer. Các lỗi nổi bật: thiếu cảnh báo định biên, thiếu nhãn khẩn/checklist đồng bộ và chưa loại ngày lễ. Chưa thực hiện lượt cải tiến CP4. Bộ câu thử có 30 câu: 12 thường, 13 khó, 5 từ chối. Nhãn nguồn trong CSV là 23 data_that, 7 tu_viet; workbook thực tế là dữ liệu giả lập BTC, không phải bằng chứng pain ngoài đời.
+
+Điểm do trợ lý đọc từng output theo pass_criterion, chưa thay thế người chấm hoặc LLM judge đã hiệu chuẩn. Chưa có người thứ hai chấm độc lập. Không thay chuẩn đã chốt sau CP2.

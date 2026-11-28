@@ -44,6 +44,8 @@ def call_model(system: str, user: str) -> dict:
             'response_format': {'type': 'json_object'}, 'max_tokens': 4096, 'stream': False}
     if MODEL_PROVIDER == 'deepseek':
         body['thinking'] = {'type': 'disabled'}
+    elif MODEL_PROVIDER == 'openai':
+        body['max_completion_tokens'] = body.pop('max_tokens')
     req = urllib.request.Request(base.rstrip('/') + '/chat/completions', data=json.dumps(body).encode(),
                                  headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key}, method='POST')
     try:

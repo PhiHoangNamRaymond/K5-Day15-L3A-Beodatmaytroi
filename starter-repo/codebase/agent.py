@@ -134,7 +134,21 @@ def assistant(week, changes, question):
 def answer(text: str) -> dict:
     match = re.fullmatch(r'(lập lịch|rà lịch|đổi phòng) (\d{4}-\d{2}-\d{2})(?: (UP-\S+))?', text.strip(), re.I)
     if not match:
-        return {'output': 'Dùng: lập lịch YYYY-MM-DD hoặc rà lịch YYYY-MM-DD; xem tuần có sẵn trên website. Thay đổi và thông báo luôn cần người duyệt.'}
+        if not isinstance(text, str) or not 3 <= len(text.strip()) <= 1500:
+            raise ValueError('Câu hỏi phải có từ 3 đến 1500 ký tự.')
+        source = dataset()
+        rows = [row for week in source['weeks'].values() for row in week['rows']]
+        payload = {'task': 'Trả lời câu hỏi vận hành từ nguồn. Chỉ đề xuất bản nháp; không gửi tin hoặc sửa lịch.',
+                   'question': text, 'rows': context_for(rows),
+                   'issues': validate_schedule_draft(rows),
+                   'requests': source['requests'], 'workload': source['workload'],
+                   'history': source['history'], 'metadata': source['metadata'],
+                   'schema': {'answer': 'câu trả lời tiếng Việt, dẫn nguồn và nêu rõ phần chưa đủ căn cứ'}}
+        reply = call_model(SYSTEM, json.dumps(payload, ensure_ascii=False))
+        result = parsed_reply(reply)
+        if not isinstance(result.get('answer'), str) or not result['answer'].strip():
+            raise ValueError('Phản hồi AI thiếu câu trả lời.')
+        return {'output': result['answer']}
     try:
         result = weekly_review(match[2], {}, match[3] or '', propose=match[1].casefold() == 'lập lịch')
         lines = [f'Tuần {match[2]} / {len(result["rows"])} buổi / {len(result["issues"])} điểm cần xử lý', result['explanation']]

@@ -8,10 +8,14 @@
 
 | Lượt | Run ID | Đạt / tổng | % | thuong | kho | tu_choi | So với chuẩn "đạt" |
 |---|---|---|---|---|---|---|---|
-| 1 | | __/__ | | __/__ | __/__ | __/__ | đạt / chưa |
+| 1 | run-1@20261128-092000 | 11/30 | 37% | 2/12 | 4/13 | 5/5 | chưa; chấm AI sơ bộ |
 | 2 | | __/__ | | __/__ | __/__ | __/__ | đạt / chưa |
 
 Kết quả từng câu: `eval/run-1.csv`, `eval/run-2.csv`. Trace: `traces/run-1.jsonl`, `traces/run-2.jsonl`.
+
+Lượt 1 dùng `gpt-6-luna`, gọi model thật trên toàn bộ 30 câu. B22 lỗi kỹ thuật `ValueError: Phản hồi AI thiếu câu trả lời.` và được chấm 0. Lượt 2 chưa chạy. Điểm trên do trợ lý đọc output đối chiếu `pass_criterion`; ghi chú từng câu nằm trong CSV, quy tắc ghi điểm nằm ở `grade_run1.py`. Đây chưa phải chấm người, kiểm định tự động đầy đủ hoặc LLM judge đã hiệu chuẩn theo `metric_spec.yaml`. Cần người trong nhóm xác nhận, người thứ hai chấm đối chiếu và hoàn thành hiệu chuẩn trước khi tuyên bố đạt metric.
+
+Ba lỗi điển hình: B06 liệt kê 5 coach/6 phòng nhưng không cảnh báo thiếu một coach; B08 không có nhãn KHẨN/T-1, Lecturer R và checklist đồng bộ; B23 còn cho phép lập nháp chuyển sang 30/04 hoặc 01/05 mà không cảnh báo ngày lễ. Không sửa đáp án hoặc chuẩn chấm để khớp output.
 
 ## 2. Lỗi lượt 1 — gom thành nhóm có tên
 

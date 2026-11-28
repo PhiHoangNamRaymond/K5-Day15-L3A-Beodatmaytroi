@@ -2,7 +2,7 @@
 
 ## Dữ liệu nguồn
 
-Đặt hai file `teaching-schedule.xlsx` và `lab-coach-schedule.xlsx` trong `data-btc/` ở gốc repository. Hai file người dùng gửi đã được chép vào thư mục đó trên máy hiện tại. Không chỉnh sửa workbook gốc và không commit chúng.
+Đặt hai file `teaching-schedule.xlsx` và `lab-coach-schedule.xlsx` trong `data-btc/` ở gốc repository, hoặc cấu hình `SCHEDULE_SOURCE_DIR` trỏ tới thư mục chứa chúng. Máy kiểm tra CP3 đang dùng `data/training-ops/` qua biến này trong `.env`. Không chỉnh sửa workbook gốc và không commit chúng.
 
 Có thể thay đường dẫn bằng biến `TEACHING_FILE`, `COACH_FILE` hoặc `SCHEDULE_SOURCE_DIR` trong `starter-repo/.env`. Nút **Đọc lại Excel** nhập lại nội dung và kiểm tra fingerprint. Bản nháp của phiên bản dữ liệu cũ được giữ riêng, không tự áp vào nguồn mới.
 
@@ -24,6 +24,14 @@ Sau khi sửa `.env`, khởi động lại backend. Project gửi nội dung l�
 Nhà cung cấp và JSON output: https://api-docs.deepseek.com/ và https://api-docs.deepseek.com/guides/json_mode/ . Model có thể thay đổi bằng `MODEL_NAME` theo tài khoản của nhóm.
 
 ## Phát triển trên Windows
+
+### Cấu hình OpenAI
+
+Đặt `MODEL_PROVIDER=openai`, `MODEL_NAME` theo model tài khoản được phép dùng và `API_KEY` trong `.env`. Bỏ dòng `API_BASE_URL` hoặc để trống để dùng `https://api.openai.com/v1`. URL có giá trị sẽ ghi đè mặc định, kể cả khi đổi provider. Biến môi trường của tiến trình được ưu tiên hơn `.env`.
+
+Nhánh OpenAI gửi `max_completion_tokens`; nhánh DeepSeek giữ `max_tokens`. Lượt thử CP3 ngày 28/11/2026 đã gọi `gpt-6-luna` thành công, có usage thực. Đây không phải bằng chứng mọi câu benchmark đều đạt.
+
+Lệnh eval nhận câu hỏi tự nhiên và gửi ngữ cảnh toàn khóa từ workbook, gồm lịch, yêu cầu đổi buổi, workload và lịch sử. Giao diện hỏi trợ lý vẫn dùng ngữ cảnh tuần được chọn. Chi phí và hành vi hai đường gọi có thể khác nhau.
 
 Terminal 1 — từ thư mục gốc repo:
 
